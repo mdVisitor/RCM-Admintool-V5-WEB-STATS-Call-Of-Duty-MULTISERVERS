@@ -1,7 +1,7 @@
 Web-Chat Call Of Duty 1/2/3/4/5 - versions
 Web Chat (with Compactitable ReCodMod RCM Admintool)
 
-Compactitable only with ReCodMod-RCM-Admintool.
+Compactitable only with ReCodMod-RCM-Admintool V5.
 
 Need edit index_chat_cfg.php
 
