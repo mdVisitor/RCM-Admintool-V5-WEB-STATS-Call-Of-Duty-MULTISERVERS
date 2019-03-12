@@ -351,7 +351,7 @@ foreach ($multi_servers_array as $arx => $xservername) {
    echo '<li>| <a href="'.$ssylka_na_chat.'?server='.$server_md5.'">'.$xservername.'</a></li>';   
 }
 foreach ($ssylki_array as $arxx => $namessylka) {	
-   echo '<li>| <a href="'.$arxx.'" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #990694, 0 0 7px #990694, 0 0 18px #990694, 0 0 40px #990694, 0 0 65px #990694;">'.$namessylka.'</a></li>';   
+   echo '<li>| <a href="'.$arxx.'" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #990694, 0 0 7px #990694, 0 0 18px #990694, 0 0 40px #990694, 0 0 65px #990694;" target="_blank">'.$namessylka.'</a></li>';   
 }
 ?>
         </ul>
