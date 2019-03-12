@@ -12,3 +12,6 @@ Compactitable only with ReCodMod-RCM-Admintool V5.
 - - In _settings.php [/RCM/cfg/_settings.php => $chat_database_for_all_servers = '';] 
 
 add Example: $chatdb_path = '/path/to/chat/chatdb.sqlite';
+
+
+![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/img/chattt.jpg)
