@@ -45,16 +45,16 @@
   
 /////MENU + INFO + RCON CONTROL  ///Все настройки на управление чата, меню...  тут
 $multi_servers_array = array(
- "ip:212.109.217.69 port:28961 rcon:123 server_md5:f14fdb1539a7162c339c8ebd836d974b" => "Dom HighXP",
- "ip:212.109.217.69 port:28962 rcon:123 server_md5:cacbad635d0dc802c7f67fa2bb5e699b" => "War HighXP",
- "ip:212.109.217.69 port:28963 rcon:123 server_md5:5f3b3aee144a27dee19fc1b5215b86ad" => "Sab Privat",
- "ip:212.109.217.69 port:28964 rcon:123 server_md5:adde28eb6e27084714ba6578914ed542" => "HardCore",
- "ip:212.109.217.69 port:28965 rcon:123 server_md5:f45a224b39c2d92f52b399461bd6fb46" => "New Weapon",
- "ip:212.109.217.69 port:28966 rcon:123 server_md5:530a6e7a347c30c7c99fecd285698b8c" => "Crossfire",
- "ip:212.109.217.69 port:28967 rcon:123 server_md5:4fe8439d8c5858e038b2934a954fedea" => "Gun Games",
- "ip:212.109.217.69 port:28968 rcon:123 server_md5:46c9909f3763c1489b50c4a563bdd91f" => "Killhouse",
- "ip:212.109.217.69 port:28969 rcon:123 server_md5:cde6894bedc68ed4810ba9393c93f576" => "Nuketown",
- "ip:212.109.217.69 port:28960 rcon:123 server_md5:811386b5f53dfaf034db5da6383bc367" => "CTF HighXP"
+ "ip:212.109.217.69 port:28961 rcon:123 server_md5:28961" => "Dom HighXP",
+ "ip:212.109.217.69 port:28962 rcon:123 server_md5:28962" => "War HighXP",
+ "ip:212.109.217.69 port:28963 rcon:123 server_md5:28963" => "Sab Privat",
+ "ip:212.109.217.69 port:28964 rcon:123 server_md5:28964" => "HardCore",
+ "ip:212.109.217.69 port:28965 rcon:123 server_md5:28965" => "New Weapon",
+ "ip:212.109.217.69 port:28966 rcon:123 server_md5:28966" => "Crossfire",
+ "ip:212.109.217.69 port:28967 rcon:123 server_md5:28967" => "Gun Games",
+ "ip:212.109.217.69 port:28968 rcon:123 server_md5:28968" => "Killhouse",
+ "ip:212.109.217.69 port:28969 rcon:123 server_md5:28969" => "Nuketown",
+ "ip:212.109.217.69 port:28960 rcon:123 server_md5:28960" => "CTF HighXP"
  );  
     
   
