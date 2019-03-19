@@ -178,7 +178,7 @@ if(empty($key))
 {
   $file = "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
   $filemd5 = md5($file); 
-  $cache_file = $cache_folder."/$filemd5.html";
+  $cache_file = $cache_folder."$filemd5.html";
   if (file_exists($cache_file)) {
    if ((time() - $cc) < filemtime($cache_file)) {
       echo file_get_contents($cache_file); 
@@ -190,7 +190,6 @@ if(empty($key))
   }
 ?>
 <!DOCTYPE html>
-<html>
 <html lang="en" class="no-js">
 	<head>
 		<meta charset="UTF-8" />
@@ -361,9 +360,12 @@ foreach ($ssylki_array as $arxx => $namessylka) {
 echo '<a href="'.$ssylka_na_chat.'?archive='.$chatdbarc.'" style="padding-bottom: 40px;"> '. $main_servername . '</a>';
 
  if((!empty($key)) || (!empty($_COOKIE['user_online_x']))){	 
-$seuiotf = substr(sprintf('%o', fileperms($chatdb_path)), -4);	
+$seuiotf = substr(sprintf('%o', fileperms($chatdb_path)), -4);
+
+if(empty($Msql_support)){	
 if($seuiotf != '0666')
-chmod($chatdb_path, 0666);	 	 
+chmod($chatdb_path, 0666);	
+}	 
        $dawDe = "<span tooltip=\"Забрать скриншот! Жди 5 сек.\"><a href=\"".$ssylka_na_ikonki."upload/index.php\" 
 onclick=\"window.open(this.href, '', 'scrollbars=1,height='+Math.min(350, screen.availHeight)+',width='+Math.min(590, screen.availWidth)); 
 return false;\" style=\"color:".$cvet_text.";\"> <img src=\"".$ssylka_na_ikonki."img/s_icon.png\" height=\"48px\" width=\"48px\"> </a></span>";	
@@ -439,7 +441,7 @@ if (empty($_GET['search']))
                 </div>
             </div>
 			<h1><div class="abs-center time"><div id="mydiv" style="display:block;"> 
-			<span id="time" ><!-- <span id="time" >10</span> --> <canvas id="DigiRain"></canvas> </span>  
+			<span id="time" ><!-- <span id="time" >10</span> --> <canvas id="DigiRain"></canvas> <canvas id=c></canvas></span>  
 			</div></div></h1>
         <div class="rela-block flex-container button-container"><?php echo '&emsp;&emsp;'.$adminiinfo ?>
         </div>
@@ -471,6 +473,7 @@ else
 
 $psx = 0;
 $psxz = 0;
+$psxzl = 0;
 if (!empty($search))
 {
 	//$search = trim($search);
@@ -510,7 +513,7 @@ $chatdb = $chatdb_path;
 try
 {
       
-	  
+if(empty($Msql_support)){	  
 $bddx = new PDO('sqlite:' . $chatdb);
 $bddx->exec('CREATE table chat(
 			id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -533,7 +536,7 @@ $bddx->exec('CREATE table chat(
 			c varchar(20)  NOT NULL
 	)');	  
 	  
-	  
+}  
 	  
 	  
 	  if(empty($Msql_support))
@@ -749,18 +752,23 @@ echo "<div class=\"tooltip-arrow\"></div>
 	else{
 /*	*/		
 ////////////////////////////////////////////// 
- if((($psxz == 0)&&($Msql_support == 1))||(($psxz < 30)&&($Msql_support == 0))){
+ if((($psxz < 20)&&(!empty($Msql_support)))||(($psxz < 40)&&(empty($Msql_support)))){
  $oss=$bdd ->query("SELECT * From chat where x='1' and guid='$guidxx' limit 1");
 while ($xnc = $oss->fetch())
 { 
    if((!empty($xnc['geo']))||(!empty($xnc['ip'])))
    {
 	   ++$psxz;
+	   ++$psxzl;
    $strana = $xnc['geo']; 
    $ipaddr = $xnc['ip'];
-   if($bdd->exec("UPDATE chat SET geo='$strana', ip='$ipaddr',x='1' WHERE guid='$guidxx' and z='0'") > 0) /// + псевдо загрузка флагов
-	    echo '<a href="'.$ssylka_na_chat.'?geo='.$strana.'&archive='.$chatdbarc.'"><span tooltip="'.$strana.'"><img src="'.$ssylka_na_chat.'/flags-mini/'.$strana.'.png" width="24" height="12" alt="'.$strana.'"></span></a>';
    
+   	/// + псевдо загрузка флагов
+	echo '<a href="'.$ssylka_na_chat.'?geo='.$strana.'&archive='.$chatdbarc.'"><span tooltip="'.$strana.'"><img src="'.$ssylka_na_chat.'/flags-mini/'.$strana.'.png" width="24" height="12" alt="'.$strana.'"></span></a>';
+   
+   if($psxzl < 2)
+   $bdd->exec("UPDATE chat SET geo='$strana', ip='$ipaddr',x='1' WHERE guid='$guidxx' and z='0'");
+  
    }
  }
 	}

@@ -1,4 +1,4 @@
-canvas {display: block;}
+ 
 .menuooo {
     position: fixed; /* Фиксированное положение */
     top: 0; /* Расстояние сверху */
@@ -8,6 +8,7 @@ canvas {display: block;}
 {position:absolute;
 top:0;left:0;
 }   
+
 
 
 .menuooo2 {
@@ -604,6 +605,7 @@ body{
   display: flex;
   flex-direction: column
 }
+
 .timer{height:100px;width:800px;margin-bottom:10px}
 .bit-display{position:absolute;top:0;left:0;right:0;bottom:0;padding:2px;border:2px solid rgba(46,212,233,0.439);box-shadow:0 0 8px rgba(46,212,233,0.439)}
 .bit-container{flex-direction:column}

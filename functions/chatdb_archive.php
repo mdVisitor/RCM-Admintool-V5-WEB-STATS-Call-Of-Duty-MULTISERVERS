@@ -1,6 +1,6 @@
 ﻿<?php
 $chatdb = $chatdb_path;
-
+if(!empty($Msql_support)){
 if (!file_exists($chatdb)){
 try
 {   
@@ -38,12 +38,13 @@ try
 			`c` varchar(20)  NOT NULL,
 			PRIMARY KEY (`id`)
 	)');	
-	$st = $dbc->query('SELECT image FROM chat');
+	$st = $dbc->query('SELECT guid FROM chat');
 	$result = $st->fetchAll();
 	if (sizeof($result) == 0)
 	{echo 'Table created successfully' . "\n";}}
     catch(PDOException $e){die($e->getMessage());}}	
-
+}
+if(empty($Msql_support)){	
 if (filesize($chatdb_path) > ($chatdbsize * 1000000)) 
   {
  if(file_exists($chatdb_path)){
@@ -91,11 +92,11 @@ try
 			c varchar(20)  NOT NULL
 	)');
 	chmod($chatdb_path, 0666);
-	$st = $dbc->query('SELECT image FROM chat');
+	$st = $dbc->query('SELECT guid FROM chat');
 	$result = $st->fetchAll();
 	if (sizeof($result) == 0)
 	{echo 'Table created successfully' . "\n";}}
     catch(PDOException $e){die($e->getMessage());}}	 
   }
   }  
-	}
+  }}

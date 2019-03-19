@@ -242,7 +242,14 @@ try
 $rc = '^3'.$rc;
 $xz = '^1'.$xz;
 	
-if (empty($_GET['all'])){	
+if (empty($_GET['all'])){
+
+if(!empty($Msql_support)){
+	$rco = iconv("utf-8", "windows-1251",$rc);	
+	$xzo = iconv("utf-8", "windows-1251",$xz);
+rcon('say ^1'.$xzo.': '.$rco, '');	
+}	
+else
  rcon('say ^1'.$xz.': '.$rc, '');
 						 
 $data = [
@@ -275,7 +282,16 @@ $stmt->execute($data);
 						 
 }else{
 if (!empty($keey)){		
+ 
+if(!empty($Msql_support)){
+	$rco = iconv("utf-8", "windows-1251",$rc);	
+	$xzo = iconv("utf-8", "windows-1251",$xz);
+ rcon('screentell '.$guid.' ^1'.$xzo.': '.$rco, '');
+}	
+else
  rcon('screentell '.$guid.' ^1'.$xz.': '.$rc, '');
+ 
+ 
    $plyrrc = $rc.' => '.$plyr;
 $data = [
     'servername' => $svrnm,
