@@ -8,7 +8,7 @@ $reponse = $bdd->query('SELECT * FROM chat where nickname like "'.$searchplayern
 else if (!empty($search_ip))
 $reponse = $bdd->query('SELECT * FROM chat where ip like "'.$search_ip.'" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);
 else if (!empty($server))
- $reponse = $bdd->query('SELECT * FROM chat where servermd5="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	 
+ $reponse = $bdd->query('SELECT * FROM chat where s_port="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	 
 else if (!empty($statusx1))
  $reponse = $bdd->query('SELECT * FROM chat where st1="'.$statusx1.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	 
 else if (!empty($statusx2))
@@ -18,7 +18,7 @@ else if (!empty($timesearch))
 else if (!empty($geosearch))
  $reponse = $bdd->query('SELECT * FROM chat where geo="'.$geosearch.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);
 else if ((!empty($server)) && (!empty($paages)))
- $reponse = $bdd->query('SELECT * FROM chat where servermd5="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	
+ $reponse = $bdd->query('SELECT * FROM chat where s_port="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	
 else
   $reponse = $bdd->query('SELECT * FROM chat where t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);
  
@@ -31,7 +31,7 @@ else
 else if (!empty($searchplayername))
 $reponse = $bdd->query('SELECT * FROM chat where nickname like "'.$searchplayername.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	
 else if (!empty($server))
- $reponse = $bdd->query('SELECT * FROM chat where servermd5="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	 
+ $reponse = $bdd->query('SELECT * FROM chat where s_port="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	 
 else if (!empty($statusx1))
  $reponse = $bdd->query('SELECT * FROM chat where st1="'.$statusx1.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	 
 else if (!empty($statusx2))
@@ -41,7 +41,7 @@ else if (!empty($timesearch))
 else if (!empty($geosearch))
  $reponse = $bdd->query('SELECT * FROM chat where geo="'.$geosearch.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);
 else if ((!empty($server)) && (!empty($paages)))
- $reponse = $bdd->query('SELECT * FROM chat where servermd5="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	
+ $reponse = $bdd->query('SELECT * FROM chat where s_port="'.$server.'" and t ="xl" ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	
 else
   $reponse = $bdd->query('SELECT * FROM chat where t ="xl" ORDER BY id  DESC LIMIT ' . $premierMessageAafficher . ', ' . $soob_na_page);	 
  }	 

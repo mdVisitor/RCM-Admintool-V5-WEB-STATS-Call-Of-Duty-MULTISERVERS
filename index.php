@@ -22,6 +22,9 @@ include("index_chat_cfg.php");
 include_once("functions/words.php"); 
 include_once("functions/chatdb_archive.php"); 
 include_once("functions/functions.inc.php");  
+include_once("functions/geo.php");  
+//var_dump($geo_array);
+
 
 if (empty($Msql_support))
 $Msql_support = 0;
@@ -35,6 +38,21 @@ if (empty($db_pass))
     $db_pass = '0';
 if (empty($charset_db))
     $charset_db = '0';
+
+
+
+
+
+///ТОЛЬКО ЛАЙТ
+////////////////////////////////////////////////////////////
+$Msql_support = 0;
+
+
+
+
+
+
+
 
 if (!empty($passsword)){		
 foreach ($steam_users_id as $passw => $xy){
@@ -518,7 +536,7 @@ $bddx = new PDO('sqlite:' . $chatdb);
 $bddx->exec('CREATE table chat(
 			id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
 			servername varchar(255)  NOT NULL,
-			servermd5 varchar(50)  NOT NULL,
+			s_port varchar(50)  NOT NULL,
 			guid varchar(255)  NOT NULL,
 			nickname varchar(255)  NOT NULL,
 			time varchar(255)  NOT NULL,
@@ -640,7 +658,7 @@ while ($dannye = $reponse->fetch())
 $xplayerip = $dannye['ip']; 
 $xpnickname = $dannye['nickname'];
 $serverx = $dannye['servername']; 
-$cntz = $dannye['servermd5'];
+$cntz = $dannye['s_port'];
 $guidxx = $dannye['guid'];
 $txt = $dannye['text'];
 $geo = $dannye['geo'];
@@ -747,8 +765,26 @@ echo "<div class=\"tooltip-arrow\"></div>
 	<span tooltip=\"$xxtime\">&nbsp;<a href=\"".$ssylka_na_chat."?timeh=".$ttim."&archive=". $chatdbarc."\"><b style=\"color:".$cvet_date_time.";\">" . $tm . "&emsp;</b> </a> </span>  </td>";
 	echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;\">";
 	
+	
+	
+foreach($geo_array as $arrr => $sd)
+{
+    foreach($sd as $w => $geon)
+    {
+		if($geo == $geon)
+		{
+	    ////ENG		
+        //echo "<br/>".$sd[2].' => '.$geon;
+	    $fullgeo = $sd[2];
+	    }
+    
+	}	
+	
+}	
+	
+	
 	if(!empty($geo))
-	  echo '<a href="'.$ssylka_na_chat.'?geo='.$geo.'&archive='. $chatdbarc.'"><span tooltip="'.$geo.'"> <img src="'.$ssylka_na_ikonki.'/flags-mini/'.$geo.'.png" width="24" height="12" alt="'.$geo.'"></span></a>';
+	  echo '<a href="'.$ssylka_na_chat.'?geo='.$geo.'&archive='. $chatdbarc.'"><span tooltip="'.$fullgeo.'"> <img src="'.$ssylka_na_ikonki.'/flags-mini/'.$geo.'.png" width="24" height="12" alt="'.$fullgeo.'"></span></a>';
 	else{
 /*	*/		
 ////////////////////////////////////////////// 

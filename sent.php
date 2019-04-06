@@ -254,7 +254,7 @@ else
 						 
 $data = [
     'servername' => $svrnm,
-    'servermd5' => $server,
+    's_port' => $server,
     'guid' => '0',
 	'nickname' => $xz,
 	'time' => $datetime,
@@ -273,8 +273,8 @@ $data = [
 ];
 
 
-$sql = "INSERT INTO chat (servername, servermd5, guid, nickname, time, timeh, text, st1, st1days, st2, st2days, ip, geo, z, t, x, c) 
-					VALUES (:servername, :servermd5, :guid, :nickname, :time, :timeh, :text, :st1, :st1days, :st2, :st2days, :ip, :geo, :z, :t, :x, :c)";
+$sql = "INSERT INTO chat (servername, s_port, guid, nickname, time, timeh, text, st1, st1days, st2, st2days, ip, geo, z, t, x, c) 
+					VALUES (:servername, :s_port, :guid, :nickname, :time, :timeh, :text, :st1, :st1days, :st2, :st2days, :ip, :geo, :z, :t, :x, :c)";
 
 $stmt= $db->prepare($sql);
 $stmt->execute($data);							 
@@ -295,7 +295,7 @@ else
    $plyrrc = $rc.' => '.$plyr;
 $data = [
     'servername' => $svrnm,
-    'servermd5' => $server,
+    's_port' => $server,
     'guid' => '0',
 	'nickname' => $xz,
 	'time' => $datetime,
@@ -314,8 +314,8 @@ $data = [
 ];
 
 
-$sql = "INSERT INTO chat (servername, servermd5, guid, nickname, time, timeh, text, st1, st1days, st2, st2days, ip, geo, z, t, x, c) 
-					VALUES (:servername, :servermd5, :guid, :nickname, :time, :timeh, :text, :st1, :st1days, :st2, :st2days, :ip, :geo, :z, :t, :x, :c)";
+$sql = "INSERT INTO chat (servername, s_port, guid, nickname, time, timeh, text, st1, st1days, st2, st2days, ip, geo, z, t, x, c) 
+					VALUES (:servername, :s_port, :guid, :nickname, :time, :timeh, :text, :st1, :st1days, :st2, :st2days, :ip, :geo, :z, :t, :x, :c)";
 $stmt= $db->prepare($sql);
 $stmt->execute($data);							 						
 		}	

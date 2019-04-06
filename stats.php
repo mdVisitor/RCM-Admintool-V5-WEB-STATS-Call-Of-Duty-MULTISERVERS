@@ -3,6 +3,17 @@
 ini_set("display_errors",1);
 error_reporting(E_ALL);
 session_start(); 
+
+function hx($sc)
+ {
+  $sc = str_replace(array(
+    "stats.php"
+  ), '', $sc);
+  return $sc . "";
+ }
+$x_ff  = 0;
+$cpath = hx(__FILE__);
+
 $key = '';
 $startx = microtime(true);
 $today = date("Y-m-d");
@@ -22,6 +33,9 @@ include("index_chat_cfg.php");
 include_once("functions/chatdb_archive.php"); 
 include_once("functions/functions.inc.php");  
 include_once("functions/ranks.php");  
+include_once("functions/geo.php");  
+//var_dump($geo_array);
+
 
 if (empty($Msql_support))
 $Msql_support = 0;
@@ -69,7 +83,10 @@ try
     ];
     $bdd = new PDO($dsn, $db_user, $db_pass, $opt);			  	  
     $sth = $bdd->query('SHOW TABLE STATUS');
-    $sizeoff = $sth->fetch(PDO::FETCH_ASSOC)["Data_length"];	
+    $sizeoff = $sth->fetch(PDO::FETCH_ASSOC)["Data_length"];
+
+  
+	
 }
 catch(Exception $e)
 {
@@ -83,10 +100,10 @@ catch(Exception $e)
 	}else $adminiinfo = '';	
 
 if(((!empty($key)) && (empty($_GET['logout']))) || ((!empty($_COOKIE['user_online_x'])) && (empty($_GET['logout'])))){ //| права на базу данных => '.substr(sprintf('%o', fileperms($stats_db_path)), -4).' 
-	$adminpl = '|<a href="'.$ssylka_na_stats.'adminpanel.php?adminpanel='.$xz.'" target="_blank" onclick="location.reload()" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #00cc00, 0 0 7px #00cc00, 0 0 18px #00cc00, 0 0 40px #00cc00, 0 0 65px #00cc00;">АдминПанель</a>
-	<a href="'.$ssylka_na_stats.'?logout=logout&lg#Logout!" onclick="location.reload()" style="color:#000;text-shadow:0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #ffa500, 0 0 7px #ffa500, 0 0 18px #ffa500, 0 0 40px #ffa500, 0 0 65px #ffa500;" >Logout!</a>';
+	$adminpl = '|<a href="'.$ssylka_na_stats.'adminpanel.php?adminpanel='.$xz.'" target="_blank" onclick="location.reload()" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #00cc00, 0 0 7px #00cc00, 0 0 16px #00cc00, 0 0 40px #00cc00, 0 0 65px #00cc00;">АдминПанель</a>
+	<a href="'.$ssylka_na_stats.'?logout=logout&lg#Logout!" onclick="location.reload()" style="color:#000;text-shadow:0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #ffa500, 0 0 7px #ffa500, 0 0 16px #ffa500, 0 0 40px #ffa500, 0 0 65px #ffa500;" >Logout!</a>';
 }else 
-	$adminpl = '|<a href="'.$ssylka_na_stats.'adminpanel.php" target="_blank" onclick="location.reload()" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #00cc00, 0 0 7px #00cc00, 0 0 18px #00cc00, 0 0 40px #00cc00, 0 0 65px #00cc00;">Логин</a>';
+	$adminpl = '|<a href="'.$ssylka_na_stats.'adminpanel.php" target="_blank" onclick="location.reload()" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #00cc00, 0 0 7px #00cc00, 0 0 16px #00cc00, 0 0 40px #00cc00, 0 0 65px #00cc00;">Логин</a>';
 
 
 if (((!empty($_GET['logout'])) && (!empty($_SESSION['username']))) || ((!empty($_GET['logout'])) && (!empty($_COOKIE['user_online_x']))))
@@ -97,7 +114,7 @@ session_destroy();
 echo "<meta http-equiv='refresh' content='0'>";
 }
 
-$cache_time = 60;
+$cache_time = 400;
              //header("Refresh:".$cache_time);
   
 if (!empty($_GET['geo'])) 
@@ -168,8 +185,8 @@ else
 
 
 
-if(empty($soob_na_page))   
-$soob_na_page=40; 
+if(empty($top_main_total))   
+$top_main_total=40; 
 
 if (!empty($_GET['search'])) 
    $search_nickname = $_GET['search']; 
@@ -182,13 +199,13 @@ else
   	$timesearch = 0;
   
    if (empty($_GET['page']))
-     $cache_time = 60;
+     $cache_time = 240;
   else
    $paages = $_GET['page'];	  
  
   if (empty($_GET['server']))
   {
-$cache_time = 60; 
+$cache_time = 240; 
 $server = 0;
   }
    else
@@ -196,20 +213,20 @@ $server = 0;
 
 if (!empty($paages)){
 	if($paages < 3)
-  $cache_time = 60; 
+  $cache_time = 240; 
     else
-		$cache_time = 10*$paages;}
+		$cache_time = 60*$paages;}
 
 if (!empty($_GET['search']))
-  $cache_time = 55; 
+  $cache_time = 240; 
 
  
 if (!empty($server))
-		$cache_time = 25; 
+		$cache_time = 60; 
 
 if (empty($cache_time))
 if (!empty($server))
-	$cache_time = 50;
+	$cache_time = 300;
 
     $cc = round($cache_time, 0);       
     $xcache_time = $cc;
@@ -338,10 +355,12 @@ $(function() {
         }
     });
 })
+
+
 $(function() {
     $("ul.chart").hBarChart();
     $("ul.chart7").hBarChart({
-        bgColor: '#696402',
+        bgColor: '#686402',
         textColor: '#fff',
         show: 'data',
         sorting: true,
@@ -351,6 +370,21 @@ $(function() {
         }
     });
 })
+$(function() {
+    $("ul.chart").hBarChart();
+    $("ul.chartweek").hBarChart({
+        bgColor: '#686402',
+        textColor: '#fff',
+		fontStyle: 'Impact',
+        show: 'data',
+        sorting: true,
+        maxStyle: {
+            bg: '#c0890a',
+            text: 'white'
+        }
+    });
+})
+
 $(function() {
     $("ul.chart").hBarChart();
     $("ul.chart8").hBarChart({
@@ -408,7 +442,14 @@ $(function() {
 
 </style>
 
-<?php if ((empty($_GET['theme'])) || (!empty($_GET['theme']) == 'dark')) {?>
+<?php 
+
+if(empty($_GET['theme']))
+$_GET['theme'] = 'dark';
+
+
+
+if (($_GET['theme']) == 'dark') {?>
 <style>
 body{
   transition:0;
@@ -429,13 +470,13 @@ table{
 
 </style>
 <?php }
-else if ((!empty($_GET['theme']) == 'light')) {
+else if (($_GET['theme'] == 'light')) {
 ?>
 <style>
 body{
   transition:0;
-  background-color:#ccc; /* #002600 */
-  color:#ddd;
+  background-color:#C0C0C0; /* #002600 */
+  color:#000;
   margin: 0;
 }
 
@@ -449,6 +490,7 @@ canvas {
 table{
  position:relative;		
 }
+
 
 
 </style>
@@ -545,7 +587,7 @@ foreach ($multi_servers_array as $arx => $xservername) {
    echo '<li>| <a href="'.$ssylka_na_stats.'?server='.$server_md5.'&kills=sort">'.$xservername.'</a></li>';   
 }
 foreach ($ssylki_array as $arxx => $namessylka) {	
-   echo '<li>| <a href="'.$arxx.'" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #990694, 0 0 7px #990694, 0 0 18px #990694, 0 0 40px #990694, 0 0 65px #990694;" target="_blank">'.$namessylka.'</a></li>';   
+   echo '<li>| <a href="'.$arxx.'" style="color:#000;text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 30px #fff, 0 0 4px #990694, 0 0 7px #990694, 0 0 16px #990694, 0 0 40px #990694, 0 0 65px #990694;" target="_blank">'.$namessylka.'</a></li>';   
 }
 ?>
         </ul>
@@ -717,6 +759,7 @@ try
 	
     $bdd =  new PDO('sqlite:' . $stats_db_path);
 	$dbw3 = new PDO('sqlite:' . $stats_db_path_week);
+    $dbm3day = new PDO('sqlite:' . $stats_db_path_month);
 	}
 	
 	  }
@@ -733,10 +776,14 @@ try
 		PDO::NULL_TO_STRING => NULL,
     ];
     $bdd = new PDO($dsn, $db_user, $db_pass, $opt);	
-    $dbw3 = $bdd;	
+    $dbw3 = $bdd;
+    $dbm3day = $bdd;
 	  }
 //$bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //отрубает базу при ошибке + в лог
 //$bdd->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );   //продолжает работу, идет откладка в лог
+
+ 
+
 
 
 $а = 0;
@@ -748,11 +795,11 @@ $number_of_rows = 0;
 $total_messages = $reponse->fetch();
 $kolichestvi_soobsh=$total_messages['id']; 
 
-$nb_pages = ceil($kolichestvi_soobsh / $soob_na_page);?>
+$nb_pages = ceil($kolichestvi_soobsh / $top_main_total);?>
 <div align="center">
 <?php
 if (isset($_GET['page'])){$page = $_GET['page']; }else {$page = 1; }
-$premierMessageAafficher = ($page - 1) * $soob_na_page;
+$premierMessageAafficher = ($page - 1) * $top_main_total;
 $reponse->closeCursor();
 $reponse = null;
 
@@ -796,31 +843,137 @@ if ($mobile_browser > 0) {
   ///////////////////// DAY TOP
   ///////////////////// DAY TOP  
   
-if (strpos($_SERVER["REQUEST_URI"], '/stats.php?main=0') !== false) {
- 	$stmt = $dbw3->prepare("SELECT * FROM play_stats_week WHERE s_kills AND s_lasttime LIKE ? ORDER BY (s_kills+0) DESC LIMIT 5");
+  //$today = '2019-03-29';
+  
+  
+  
+if ((strpos($_SERVER["REQUEST_URI"], '/stats.php?main=0') !== false) || ((strpos($_SERVER["REQUEST_URI"], '&kills=sort') !== false)&&(!empty($server))))
+{
+	 
+
+
+if(!file_exists($stats_db_path_week)){
+ 
+    $dbm3day = new PDO('sqlite:'. $stats_db_path_week);
+    $dbm3day->exec("CREATE TABLE db_stats_week 
+	(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+			servername varchar(255)  NOT NULL,
+			s_pg varchar(50) NOT NULL,			
+			w_guid varchar(32)  NOT NULL,
+			w_port varchar(10) NOT NULL,			
+			s_player varchar(90)  NOT NULL,
+			s_kills varchar(10) NOT NULL,
+			s_deaths varchar(10) NOT NULL,							
+			s_heads varchar(8) NOT NULL,
+            s_time datetime NOT NULL,			
+			s_lasttime datetime NOT NULL)"); 
+    $dbm3day = NULL;
+   }
+ $dbm3day = new PDO('sqlite:' . $stats_db_path_week);	
+
+
+
+	 
+	$check_users_table = $dbm3day->prepare("SELECT s_kills FROM db_stats_week");
+if($check_users_table == TRUE) {
+	
+	
+
+
+/*
+	
+ //if(empty($Msql_support)){
+if(file_exists($stats_db_path_week)){
+	if (strpos($_SERVER["REQUEST_URI"], '/stats.php?main=0') !== false)
+ 	   $stmt = $dbw3->prepare("SELECT * FROM db_stats_week WHERE s_kills AND s_lasttime = :s_lasttime ORDER BY (s_kills+0) DESC LIMIT 5");
+	else if((strpos($_SERVER["REQUEST_URI"], '&kills=sort') !== false)&&(!empty($server)))
+		$stmt = $dbw3->prepare("SELECT * FROM db_stats_week WHERE s_kills AND s_lasttime = :s_lasttime AND w_port='$server' ORDER BY (s_kills+0) DESC LIMIT 5");
+    $stmt->execute(array(':s_lasttime' => ''.$today.'%'));
+    $rs = $stmt->fetchAll();	
+ }else{
+	if (strpos($_SERVER["REQUEST_URI"], '/stats.php?main=0') !== false)
+ 	   $stmt = $dbw3->prepare("SELECT * FROM db_stats_week WHERE s_kills AND s_lasttime LIKE ? ORDER BY (s_kills+0) DESC LIMIT 5");
+	else if((strpos($_SERVER["REQUEST_URI"], '&kills=sort') !== false)&&(!empty($server)))
+		$stmt = $dbw3->prepare("SELECT * FROM db_stats_week WHERE s_kills AND s_lasttime LIKE ? AND s_port='$server' ORDER BY (s_kills+0) DESC LIMIT 5");
     $stmt->execute(array(''.$today.'%'));
     $rs = $stmt->fetchAll();
-$sss=0;
-    foreach ($rs as $row)	
-     {	   ++$sss;
+ }
+
+*/
+ 
+ 
+ 	if (strpos($_SERVER["REQUEST_URI"], '/stats.php?main=0') !== false)
+ 	   $rs = $dbm3day->query("SELECT * FROM db_stats_week WHERE s_kills ORDER BY (s_kills+0) DESC LIMIT 5");
+	else if((strpos($_SERVER["REQUEST_URI"], '&kills=sort') !== false)&&(!empty($server)))
+	   $rs = $dbm3day->query("SELECT * FROM db_stats_week WHERE s_kills and w_port='$server' ORDER BY (s_kills+0) DESC LIMIT 5");
+ 
+ $sss=0;
+ 
+ 
+ foreach ($rs as $row){	 
+
+	++$sss;
                 $serverx    = $row['servername']; 
-                $cntz       = $row['servermd5']; 
+                $cntz       = $row['w_port']; 
                 $playername = $row['s_player'];
                 $kills      = $row['s_kills'];
+                $deaths     = $row['s_deaths'];				
+                //$suicids    = $row['s_suicids'];				
+                $heads      = $row['s_heads'];
+                $lasttime   = $row['s_lasttime'];
+                $guid       = $row['w_guid'];
+ 
 	 
 	            $jarr_playername[] = $playername;
 	            $iarr_skill[]      = $kills;
-				$iarr_sss[]      =   $sss;	
+				$iarr_deaths[]     = $deaths;
+				$iarr_sss[]        = $sss;
+                //$iarr_cfour[]      = $cfour;				
            }
+}		   
+		   
 if(!empty($iarr_skill[4])){
- echo '<section style="opacity: 0.4; width:70%; margin-top: -40px; margin-left: -40px; font-family: Impact; color: white;font-size: 18px;"><div class="container"><div class="col-md-6"><div><ul class="chart7">'; 		
-echo '<li data-data="'.$iarr_skill[0].'" sd-sd="22"> NR-'.$iarr_sss[0].' &#128293; <b>'.$jarr_playername[0].'</b> <b>[Kills: '.$iarr_skill[0].']</b> &#128293; <strong>TOP TODAY FROM ALL SERVERS</strong> </li>';
-echo '<li data-data="'.$iarr_skill[1].'" sd-sd="22"> NR-'.$iarr_sss[1].' &#128293; <b>'.$jarr_playername[1].'</b> <b>[Kills: '.$iarr_skill[1].']</b> &#128293; <strong>TOP TODAY FROM ALL SERVERS</strong> </li>';
-echo '<li data-data="'.$iarr_skill[2].'" sd-sd="22"> NR-'.$iarr_sss[2].' &#128293; <b>'.$jarr_playername[2].'</b> <b>[Kills: '.$iarr_skill[2].']</b> &#128293; <strong>TOP TODAY FROM ALL SERVERS</strong> </li>';
-echo '<li data-data="'.$iarr_skill[3].'" sd-sd="22"> NR-'.$iarr_sss[3].' &#128293; <b>'.$jarr_playername[3].'</b> <b>[Kills: '.$iarr_skill[3].']</b> &#128293; <strong>TOP TODAY FROM ALL SERVERS</strong> </li>';
-echo '<li data-data="'.$iarr_skill[4].'" sd-sd="22"> NR-'.$iarr_sss[4].' &#128293; <b>'.$jarr_playername[4].'</b> <b>[Kills: '.$iarr_skill[4].']</b> &#128293; <strong>TOP TODAY FROM ALL SERVERS</strong> </li>';                                 
+ echo '<section style="opacity: 0.4; width:70%; margin-top: -40px; margin-left: -40px;"><div class="container">
+ <div class="col-md-6"><div><ul class="chartweek">'; 		
+
+ 
+$o = 0;
+while ($o <= 4) {
+   
+
+ echo '<li data-data="'.$iarr_skill[''.$o.''].'" sd-sd="22"> NR-'.$iarr_sss[''.$o.''].' &#128293;<b>'.$jarr_playername[''.$o.''].'</b>&#128293; 
+<b>Kills:</b> <b style="opacity: 0.9; color:lime;">'.$iarr_skill[''.$o.''].'</b>
+<b>Deaths:</b> <b style="opacity: 0.9; color:lime;">'.$iarr_deaths[''.$o.''].'</b>
+ '; 
+
+
+ if (strpos($_SERVER["REQUEST_URI"], '/stats.php?main=0') !== false) 
+ echo '<strong style="opacity: 0.7; font-family: Impact; font-size: 15px;"> TOP WEEK FROM ALL SERVERS</strong></li>';
+else
+echo '<strong style="opacity: 0.7; font-family: Impact; font-size: 15px;"> TOP WEEK</strong></li>';
+
+  
+
+$o++;
+}
+
+
+ 
  echo '</ul></div></div></div></section>'; 
-} }else{echo '</br></br>';}
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+}else{echo '</br></br>';}
   ///////////////////// DAY TOP
     ///////////////////// DAY TOP
 	  ///////////////////// DAY TOP
@@ -829,37 +982,140 @@ echo '<li data-data="'.$iarr_skill[4].'" sd-sd="22"> NR-'.$iarr_sss[4].' &#12829
 		    ///////////////////// DAY TOP
 			
  
- echo '<table border="0"  id="container">';
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+if(empty($search))
+ echo '<table border="0"  id="container">';  
  
  $i=0;
+ $p=0;
  $ssssob = 0;
  $sort_msql_from_headers = 'sort'; 
  $pixelz = 0;
  
 while ($row = $reponse->fetch())	
 {	
+
+ if(!empty($search))
+  echo '<table border="0"  id="container" width="90%">';              
+
+
+			    $guidxport  = $row['s_pg'];
                 $serverx    = $row['servername']; 
-                $cntz       = $row['servermd5']; 
+                $cntz       = $row['s_port']; 
                 $playername = $row['s_player'];
-                $place      = $row['s_place'];
+                $place      = $row['w_place'];
                 $kills      = $row['s_kills'];
                 $deaths     = $row['s_deaths'];				
-                $ratio      = $row['s_ratio'];
-                $skill      = $row['s_skill'];
-				$prestige   = $row['new_prestige'];
+                $ratio      = $row['w_ratio'];
+                $skill      = $row['w_skill'];
+			    $prestige   = $row['w_prestige'];
                 $suicids    = $row['s_suicids'];				
                 $heads      = $row['s_heads'];
-                $nades      = $row['s_grenade'];
+                //$nades      = $row['s_grenade'];
                 $lasttime   = $row['s_lasttime'];
                 $timee      = $row['s_time'];
                 $guid       = $row['s_guid'];
-                $clc        = $row['s_clear'];
-                $geo        = $row['s_geo'];
-				$fps        = $row['new_fps'];
-				$ping       = $row['new_ping'];
-                $cfour		= $row['s_c4'];		
-                $melle      = $row['s_melle'];	
-   
+                $geo        = $row['w_geo'];
+				$fps        = $row['w_fps'];
+				$ping       = $row['w_ping']; 	
+                $melle      = $row['s_melle'];
+
+
+				 
+				$guidxportarr[] = $guidxport;
+				
+				
+				if(empty($heads))
+				 $procent =	'0%';
+                else
+				 $procent = get_percentage($heads, $kills); 
+				
+			
+				if(!empty($kills)){
+				  if(!empty($deaths)){
+		               $w_ratio = $kills/$deaths;
+				        }}
+				if(empty($w_ratio))
+				 $w_ratio = 0;
+		
+		$iplacer=$p+1;
+		
+                       if(!file_exists($cpath.'/cache/cron_update_'.$guidxport))
+                               touch($cpath.'/cache/cron_update_'.$guidxport);
+	
+                            $cr = filemtime($cpath.'/cache/cron_update_'.$guidxport);
+                            if (time() - $cr >= 60 * 60) {
+                                file_put_contents($cpath.'/cache/cron_update_'.$guidxport, "");
+			
+			
+	            $bdd->query("UPDATE db_stats_2 SET w_place='$iplacer', w_ratio='$w_ratio' WHERE s_pg='".$guidxport."'");	
+                                                         }
+			
+        
+		$ratio = $w_ratio;
+		
+
+		
                 // количество дней (разница)
 				 if((!empty($timee))&&(!empty($lasttime))){
 					 
@@ -874,16 +1130,39 @@ while ($row = $reponse->fetch())
 					 $xday = $raznica->d;   // кол-во дней
 					 $xhours = $raznica->h; // кол-во часов
 					 $xmin = $raznica->i;   // кол-во минут
-                     $xsek = $raznica->s;   // кол-во c					 
+                     $xsek = $raznica->s;   // кол-во c		
+
+			  if(!empty($xday)){
+				if((!empty($xhours))&&($xhours > 0)){ 
+				  if((!empty($xmin))&&($xmin > 0)){
+					  //$xmin = '';
+				     if((!empty($xsek))&&($xsek > 0))
+					   $xsek = '';
+				  }
+				} 
+			  }
+					
+	/*				
+					
 					 if(!empty($xyears)) $xyears = $xyears.'. год '; else $xyears = '';
-					 if(!empty($xmonth)) $xmonth = $xyears.'. месяц '; else $xmonth = '';					 
-					 if(!empty($xday)) $xday = $xyears.'. день '; else $xday = '';
+					 if(!empty($xmonth)) $xmonth = $xmonth.'. месяц '; else $xmonth = '';					 
+					 if(!empty($xday)) $xday = $xday.'. день '; else $xday = '';
 					 if(!empty($xhours)) $xhours = $xhours.'. час '; else $xhours = '';					 
 				     if(!empty($xmin)) $xmin = $xmin.'. мин '; else $xmin = '';
                      if(!empty($xsek)) $xsek = $xsek.'. сек '; else $xsek = '';	
+	*/				 
+					 
+					 if(!empty($xyears)) $xyears = $xyears.'. year '; else $xyears = '';
+					 if(!empty($xmonth)) $xmonth = $xmonth.'. month '; else $xmonth = '';					 
+					 if(!empty($xday)) $xday = $xday.'. day '; else $xday = '';
+					 if(!empty($xhours)) $xhours = $xhours.'. hour '; else $xhours = '';					 
+				     if(!empty($xmin)) $xmin = $xmin.'. min '; else $xmin = '';
+                     if(!empty($xsek)) $xsek = $xsek.'. sec '; else $xsek = '';	
+					 					 
 					 
 					 
-                     $lasttime2 = $xyears.''.$xmonth.''.$xday.''.$xhours.''.$xmin.''.$xsek;	
+					 
+                     $lasttime2 = $xyears.''.$xmonth.''.$xday.''.$xhours.''.$xmin; //.''.$xsek;	
 				 
 				     $strrwer = strlen($lasttime2);
 				 
@@ -898,17 +1177,41 @@ while ($row = $reponse->fetch())
 					 $xday = $interval->d;   // кол-во дней
 					 $xhours = $interval->h; // кол-во часов
 					 $xmin = $interval->i;   // кол-во минут
-                     $xsek = $interval->s;   // кол-во c					 
+                     $xsek = $interval->s;   // кол-во c	
+                  
+			  if(!empty($xday)){
+				if((!empty($xhours))&&($xhours > 0)){ 
+				  if((!empty($xmin))&&($xmin > 0)){
+					  //$xmin = '';
+				     if((!empty($xsek))&&($xsek > 0))
+					   $xsek = '';
+				  }
+				} 
+			  }
+				
+	/*				
+					
 					 if(!empty($xyears)) $xyears = $xyears.'. год '; else $xyears = '';
-					 if(!empty($xmonth)) $xmonth = $xyears.'. месяц '; else $xmonth = '';					 
-					 if(!empty($xday)) $xday = $xyears.'. день '; else $xday = '';
+					 if(!empty($xmonth)) $xmonth = $xmonth.'. месяц '; else $xmonth = '';					 
+					 if(!empty($xday)) $xday = $xday.'. день '; else $xday = '';
 					 if(!empty($xhours)) $xhours = $xhours.'. час '; else $xhours = '';					 
 				     if(!empty($xmin)) $xmin = $xmin.'. мин '; else $xmin = '';
-                     if(!empty($xsek)) $xsek = $xsek.'. сек '; else $xsek = '';		
+                     if(!empty($xsek)) $xsek = $xsek.'. сек '; else $xsek = '';	
+	*/				 
+					 
+					 if(!empty($xyears)) $xyears = $xyears.'. year '; else $xyears = '';
+					 if(!empty($xmonth)) $xmonth = $xmonth.'. month '; else $xmonth = '';					 
+					 if(!empty($xday)) $xday = $xday.'. day '; else $xday = '';
+					 if(!empty($xhours)) $xhours = $xhours.'. hour '; else $xhours = '';					 
+				     if(!empty($xmin)) $xmin = $xmin.'. min '; else $xmin = '';
+                     if(!empty($xsek)) $xsek = $xsek.'. sec '; else $xsek = '';		
+					 
 					 
                      $timee2 = $xyears.''.$xmonth.''.$xday.''.$xhours.''.$xmin.''.$xsek;
+					 
 					 if(empty($timee2))
 						 $timee2 = " сейчас"; 
+					 
 					 
 					 
 				     $strrwer = strlen($timee2);
@@ -961,7 +1264,7 @@ $servername = str_replace($pre_server, "", $serverx);
 	
 if (empty($search)){	
 if(empty($search_nnnnnnnnnnnnn)){$shadowheader = $shadow_not_click;}else{$shadowheader = $shadow_red;} 	   
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
 #
 </center></td>";		
 }
@@ -969,7 +1272,7 @@ else
 	{
 		
 if(empty($search_nnnnnnnnnnnnn)){$shadowheader = $shadow_not_click;}else{$shadowheader = $shadow_red;} 	   
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
 Server 
 </center></td>";	
 		
@@ -977,20 +1280,20 @@ Server
    
 
 if(empty($search_geo)){$shadowheader = $shadow_not_click;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>
 Geo
 </center></td>";	
 
 if(empty($search_prestige)){$shadowheader = $shadow_not_click;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
 
 </center></td>";
 
 
 
 if(empty($search_kills)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?kills=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?kills=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
  
 </a>
 </center></td>";	
@@ -998,7 +1301,7 @@ echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 
 
 
 if(empty($_GET['search'])){$shadowheader = $shadow_not_click;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>
 Nickname
 &emsp;
 </center></td>";
@@ -1006,80 +1309,67 @@ Nickname
 
 
 if(empty($search_kills)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?kills=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?kills=".$sort_msql_from_headers."&main=". $chatdbarc."&server=".$server."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 Kills
 </a>
 </center></td>";	
 
 if(empty($search_deaths)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?deaths=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?deaths=".$sort_msql_from_headers."&main=". $chatdbarc."&server=".$server."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 Deaths
 </a>
 </center></td>";	
 
 if(empty($search_ratiokd)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?ratios=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?ratios=".$sort_msql_from_headers."&main=". $chatdbarc."&server=".$server."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 K/D
 </a>
 </center></td>";
 
 if(empty($search_heads)){$shadowheader = $shadow_green; $green_image_shadow = 'lime';}else{$shadowheader = $shadow_red; $green_image_shadow = 'red';}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?headhots=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?headhots=".$sort_msql_from_headers."&main=". $chatdbarc."&server=".$server."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 Heads</a>
 </center></td>";	
 
 if(empty($search_skill)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?skill=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?skill=".$sort_msql_from_headers."&main=". $chatdbarc."&server=".$server."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 Skill
 </a>
 </center></td>";	
 
-if(empty($search_grenades)){$shadowheader = $shadow_green; $green_image_shadow = 'lime';}else{$shadowheader = $shadow_red; $green_image_shadow = 'red';}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?grenades=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
-<img src=\"".$ssylka_na_ikonki."/img/grenade-icon.png\" 
-style=\"-webkit-filter: drop-shadow(8px 8px 12px ".$green_image_shadow.");filter: drop-shadow(8px 8px 12px ".$green_image_shadow.");\" height=\"24px\" width=\"24px\">
-</a>
-</center></td>";
-
+ 
+if (empty($search)){
 if(empty($search_knife)){$shadowheader = $shadow_green; $agreen_image_shadow = 'lime';}else{$shadowheader = $shadow_red; $agreen_image_shadow = 'red';}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?knife=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?knife=".$sort_msql_from_headers."&main=". $chatdbarc."&server=".$server."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 <img src=\"".$ssylka_na_ikonki."/img/knife-icon.png\" 
 style=\"-webkit-filter: drop-shadow(8px 8px 12px ".$agreen_image_shadow.");filter: drop-shadow(8px 8px 12px ".$agreen_image_shadow.");\" height=\"24px\" width=\"24px\">
-</a>
-</center></td>";
-
-
-
-if (!empty($search)){
-if(empty($search_suecides)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?suecides=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
-Info
-</a>
-</center></td>";
-}else{
-if(empty($search_cfour)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?cfour=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
-C4
 </a>
 </center></td>";
 }
 
 
+if (!empty($search)){
+if(empty($search_suecides)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?suecides=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
+Info
+</a>
+</center></td>";
+} 
+
+
 
 
 if (!empty($search)){
 if(empty($search_suecides)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?suecides=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?suecides=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 Soul
 </a>
 </center></td>";
@@ -1089,8 +1379,8 @@ Soul
   
 
 if(empty($search_lastshot)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-<a href=\"".$ssylka_na_stats."?time=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\">
+echo "<td style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
+<a href=\"".$ssylka_na_stats."?time=".$sort_msql_from_headers."&main=". $chatdbarc."\" style=\"background:#333;font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\">
 Playing
 </a>
 &emsp;</center></td>";
@@ -1112,9 +1402,10 @@ Playing
 	   
 if (empty($search)){		   
 	      
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver; font-size: 18px;font-size:".$auto_font.";\"><b>&emsp;
-<a href=\"".$ssylka_na_stats."?guid=".$guid."&main=".$chatdbarc."\">
-<b style=\"color:".$color_ip.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 30px #000, 0 0 4px #555, 0 0 7px #555, 0 0 13px #555, 0 0 40px #555, 0 0 21px #555;\">".$i."</b></a></b></td>"; 
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver; font-size: 16px;font-size:".$auto_font.";\"><b>&emsp;
+<a href=\"".$ssylka_na_stats."?server=".$cntz."&main=".$chatdbarc."\">
+<b style=\"color:".$color_ip.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 30px #000, 0 0 4px #555, 0 0 7px #555, 0 0 13px #555, 0 0 40px #555, 0 0 21px #555;\">
+".($premierMessageAafficher+$i)."</b></a></b></td>"; 
 
 }else
 {
@@ -1122,8 +1413,8 @@ echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; fo
 	
 	
 	
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver; font-size: 18px;font-size:".$auto_font.";\"><b>&emsp;
-<a href=\"".$ssylka_na_stats."?guid=".$guid."&main=".$chatdbarc."\">
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver; font-size: 16px;font-size:".$auto_font.";\"><b>&emsp;
+<a href=\"".$ssylka_na_stats."?server=".$cntz."&main=".$chatdbarc."\">
 <b style=\"color:".$color_ip.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 30px #000, 0 0 4px #555, 0 0 7px #555, 0 0 13px #555, 0 0 40px #555, 0 0 21px #555;\">
 ".colorize($servername)."</b></a></b></td>"; 
 
@@ -1135,12 +1426,30 @@ echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; fo
 }
 
 
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&nbsp;
+
+foreach($geo_array as $arrr => $sd)
+{
+    foreach($sd as $w => $geon)
+    {
+		if($geo == $geon)
+		{
+	    ////ENG		
+     //echo "<br/>".$sd[2].' => '.$geon;
+	    $fullgeo = $sd[2];
+	    }
+    
+	}	
+	
+}
+
+
+
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&nbsp;
 <a href=\"".$ssylka_na_stats."?xgeo=".$geo."&main=".$chatdbarc."\">
 <b style=\"color:".$color_geo.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 30px #000, 0 0 2px ".$color_geo.", 0 0 2px ".$color_geo.", 0 0 3px ".$color_geo.", 0 0 1px ".$color_geo.", 0 0 2px ".$color_geo.";\">
 ";
-echo '<span tooltip="'.$geo.'"> 
-<img src="'.$ssylka_na_ikonki.'/flags-mini/'.$geo.'.png" alt="'.$geo.'"></span>';
+echo '<span tooltip="'.$fullgeo.'"> 
+<img src="'.$ssylka_na_ikonki.'/flags-mini/'.$geo.'.png" alt="'.$fullgeo.'"></span>';
 echo "</b></a></td>"; 
    
    
@@ -1168,7 +1477,7 @@ foreach ($ranked as $rkilled => $rnk){
       if(empty($rankxx))
 	  $rankxx = '0';
 
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&nbsp;
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&nbsp;
 <span tooltip=".$rankname."><img src=\"".$ssylka_na_ikonki."img/ranks/".$rankimg."\" width=\"20px\" alt=\"".$rankname."\" title=\"".$rankname."\"></span>
 <b style=\"font-size:13px;color:".$color_prestige.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_prestige.", 0 0 2px ".$color_prestige.", 0 0 1px ".$color_prestige.", 0 0 2px ".$color_prestige.", 0 0 3px ".$color_prestige.";\">".$rankxx." </b></td>"; 
     
@@ -1177,69 +1486,72 @@ if((prestige_image($prestige)) == 'prestige/null.png')
 else
 	$prestigstyle = '';
     
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&nbsp;   
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&nbsp;   
 <img src=\"".$ssylka_na_ikonki."img/".prestige_image($prestige)."\" width=\"20px\" alt=\"".prestige_image($prestige)."\" title=\"".prestige_image($prestige)."\" ".$prestigstyle."> 
 </td>";     
    
   
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&emsp;
 <a href=\"".$ssylka_na_stats."?search=".$guid."&main=".$chatdbarc."\">
 <b style=\"color:".$color_nickname.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px ".$color_nickname.", 0 0 2px ".$color_nickname.", 0 0 1px ".$color_nickname.", 0 0 2px ".$color_nickname.", 0 0 3px ".$color_nickname.";\">
 <span tooltip=".$guid.">".$playername."</span></b></a></td>"; 
 
 
  
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&emsp;
 <b style=\"color:".$color_kills.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_kills.", 0 0 2px ".$color_kills.", 0 0 1px ".$color_kills.", 0 0 2px ".$color_kills.", 0 0 3px ".$color_kills.";\">
 ".$kills."</b></td>"; 
    
  
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&emsp;
 <b style=\"color:".$color_deaths.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_deaths.", 0 0 2px ".$color_deaths.", 0 0 1px ".$color_deaths.", 0 0 2px ".$color_deaths.", 0 0 3px ".$color_deaths.";\">
-".$deaths."</b></b></td>"; 
+".$deaths."</b></td>"; 
   
  
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&emsp;
 <b style=\"color:".$color_kdratio.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 30px #000, 0 0 4px ".$color_kdratio.", 0 0 7px ".$color_kdratio.", 0 0 13px ".$color_kdratio.", 0 0 40px ".$color_kdratio.", 0 0 21px ".$color_kdratio.";\">
-".$rrattio."</b></b></td>"; 
+".$rrattio."</b></td>"; 
  
  
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
-<b style=\"color:".$color_heads.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 4px ".$color_heads.", 0 0 2px ".$color_heads.", 0 0 1px ".$color_heads.", 0 0 2px ".$color_heads.", 0 0 3px ".$color_heads.";\">
-".$heads."</b></b></td>";
+  
+ if (!empty($search))
+ $procent =  "<center>&emsp;<b style=\"color:".$color_heads."; color: Silver; font-family: Titillium Web; font-size: 15px; text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 4px ".$color_heads.", 0 0 2px ".$color_heads.", 0 0 1px ".$color_heads.", 0 0 2px ".$color_heads.", 0 0 3px ".$color_heads.";\">".$heads."</b></br>&emsp;
+<b style=\"color: #777777; font-family: Impact; font-size: 13px; text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000, 0 0 7px #000, 0 0 9px #000, 0 0 12px #000, 0 0 22px #000, 0 0 33px #000;\">".$procent."</b></center>"; 
+else
+	$procent = "<b style=\"color: Silver; font-family: Titillium Web; font-size: 15px; text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 4px ".$color_heads.", 0 0 2px ".$color_heads.", 0 0 1px ".$color_heads.", 0 0 2px ".$color_heads.", 0 0 3px ".$color_heads.";\">&emsp;".$procent
+."</b>";
+
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9;\">
+<span tooltip=\"$heads\">".$procent."</span></td>";
   
  
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
-<b style=\"color:".$color_skill.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 30px #000, 0 0 4px ".$color_skill.", 0 0 7px ".$color_skill.", 0 0 13px ".$color_skill.", 0 0 40px ".$color_skill.", 0 0 21px ".$color_skill.";\">
-".$skill."</b></b></td>";
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&emsp;
+<b style=\"color:black; text-shadow: 0 0 1px black, 0 0 2px green, 0 0 30px green, 0 0 4px green, 0 0 7px green, 0 0 13px green, 0 0 40px green, 0 0 11px green;\">
+".(floor($skill*1000)/1000)."</b></td>";
  
  
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
-<b style=\"color:".$color_grenades.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_grenades.", 0 0 2px ".$color_grenades.", 0 0 1px ".$color_grenades.", 0 0 2px ".$color_grenades.", 0 0 3px ".$color_grenades.";\">
-".$nades."</b></b></td>";
+ 
 
-
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">&emsp;
+if (empty($search)){
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">&emsp;
 <b style=\"color:".$color_knife.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_knife.", 0 0 2px ".$color_knife.", 0 0 1px ".$color_knife.", 0 0 2px ".$color_knife.", 0 0 3px ".$color_knife.";\">
-".$melle."</b></b></td>";
+".$melle."</b></td>";
+}
 
-
-if (!empty($search))
+if (!empty($search)){
 	$fgfps = "<b style=\"font-size: 14px;color:#000;text-shadow: 0 0 1px lime, 0 0 2px #000, 0 0 3px lime, 0 0 2px ".$color_suicids.", 0 0 2px ".$color_suicids.", 0 0 1px ".$color_suicids.", 0 0 2px ".$color_suicids.", 0 0 3px ".$color_suicids.";\">
 &emsp;Fps: ".$fps."</br>&emsp;Ping: ".$ping."</b>";
-else
-	$fgfps = "<b style=\"font-size: 18px;color:".$color_suicids.";text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_suicids.", 0 0 2px ".$color_suicids.", 0 0 1px ".$color_suicids.", 0 0 2px ".$color_suicids.", 0 0 3px ".$color_suicids.";\">
-&emsp;".$cfour."</b>";
+ 
 
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 16px;font-size:".$auto_font.";\">
  ".$fgfps."
  </td>";
-
+}
 
 
 if (!empty($search)){
 if(empty($search_suecides)){$shadowheader = $shadow_green;}else{$shadowheader = $shadow_red;}
-echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . "; height: 28px; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> &emsp;
+echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";font-family: Verdana; font-size: 16px;font-size:".$auto_font_title.";".$shadowheader."\"> &emsp;
 ".$suicids."
 </td>";
 }
@@ -1248,9 +1560,9 @@ echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . "; height: 28px; f
 
 echo "<td tooltip=".$lasttime." style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 13px;font-size:".$auto_font.";\"> 
   
-       &emsp;<span style=\"color:#d17519;text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_date_time.", 0 0 2px ".$color_date_time.", 0 0 1px ".$color_date_time.", 0 0 2px ".$color_date_time.", 0 0 3px ".$color_date_time.";\"> Заход: </span> | 
+       &emsp;<span style=\"color:#d17519;text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_date_time.", 0 0 2px ".$color_date_time.", 0 0 1px ".$color_date_time.", 0 0 2px ".$color_date_time.", 0 0 3px ".$color_date_time.";\"> Ago: </span> | 
 	         <span style=\"color:yellow;text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px ".$color_date_time.", 0 0 2px ".$color_date_time.", 0 0 1px ".$color_date_time.", 0 0 2px ".$color_date_time.", 0 0 3px ".$color_date_time.";\"> ".$timee2."&emsp;</span>
-  </br>&emsp;<span style=\"color:#86b300;text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px lime, 0 0 2px lime, 0 0 1px lime, 0 0 2px lime, 0 0 3px lime;\"> &emsp; Всего: </span> |
+  </br>&emsp;<span style=\"color:#86b300;text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px lime, 0 0 2px lime, 0 0 1px lime, 0 0 2px lime, 0 0 3px lime;\"> &emsp; Total: </span> |
              <span style=\"color:lime;text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 2px lime, 0 0 2px lime, 0 0 1px lime, 0 0 2px lime, 0 0 3px lime;\"> ".$lasttime2."&emsp;</span>
 
 </td>";
@@ -1259,265 +1571,72 @@ echo "<td tooltip=".$lasttime." style=\"background:" . ($i % 2 ? '#111' : '#222'
 	  
 	  echo "</tr>";	
 
-
-
-			  }
-
+if(!empty($search))
 echo '</table>';
 
- 
 
-if (strpos($_SERVER["REQUEST_URI"], '/stats.php?main=0') !== false) {	  
- $shadowheader = $shadow_top_week;	
+
+echo'
+
+    <tr bgcolor="#f0f0f0">';
 	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
- echo '
- </br></br>
- 
- <table border="0" width="70%" id="container">
-<tr> 
-<td style="background:#141e21; opacity: 0.9; font-family: Ariel; font-size: 18px;font-size:'.$auto_font_title_week.';'.$shadowheader.'"> <center>&emsp;
-WEEK TOP 5 
-&emsp;</center></td>	
-
-</tr> 
- </table>
- 
- </br>
- <table border="0" width="70%" id="container">';
- 
- echo "<tr>";   
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-Kills
-&emsp;</center></td>";	
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-K/D Ratio
-&emsp;</center></td>";	 
- echo "</tr>"; 
- if(!empty($arr_kills[4])){ 
- echo "<tr>";
- echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div class="container"><div class="col-md-6"><div><ul class="chart1">'; 		
-echo '<li data-data="'.$arr_kills[0].'" sd-sd="22"> <b><a href="'.$ssylka_na_stats.'?search='.$guidxx[0].'&main='.$chatdbarc.'" style="font-size:15px;font-family:Impact;color:Black;text-shadow: 0 0 5px #fff, 0 0 1px #fff, 0 0 2px #919903, 0 0 16px #919903, 0 0 18px #919903, 0 0 19px #919903, 0 0 20px #919903;">'.$arr_playername[0].'</a></b> <b style="color:white;">[Kills: '.$arr_kills[0].']</b> </li>';
-echo '<li data-data="'.$arr_kills[1].'" sd-sd="22"> <b><a href="'.$ssylka_na_stats.'?search='.$guidxx[1].'&main='.$chatdbarc.'" style="font-size:15px;font-family:Impact;color:Black;text-shadow: 0 0 5px #fff, 0 0 1px #fff, 0 0 2px #919903, 0 0 16px #919903, 0 0 18px #919903, 0 0 19px #919903, 0 0 20px #919903;">'.$arr_playername[1].'</a></b> <b style="color:white;">[Kills: '.$arr_kills[1].']</b> </li>';
-echo '<li data-data="'.$arr_kills[2].'" sd-sd="22"> <b><a href="'.$ssylka_na_stats.'?search='.$guidxx[2].'&main='.$chatdbarc.'" style="font-size:15px;font-family:Impact;color:Black;text-shadow: 0 0 5px #fff, 0 0 1px #fff, 0 0 2px #919903, 0 0 16px #919903, 0 0 18px #919903, 0 0 19px #919903, 0 0 20px #919903;">'.$arr_playername[2].'</a></b> <b style="color:white;">[Kills: '.$arr_kills[2].']</b> </li>';
-echo '<li data-data="'.$arr_kills[3].'" sd-sd="22"> <b><a href="'.$ssylka_na_stats.'?search='.$guidxx[3].'&main='.$chatdbarc.'" style="font-size:14px;font-family:Impact;color:Black;text-shadow: 0 0 5px #fff, 0 0 1px #fff, 0 0 2px #919903, 0 0 16px #919903, 0 0 18px #919903, 0 0 19px #919903, 0 0 20px #919903;">'.$arr_playername[3].'</a></b> <b style="color:white;">[Kills: '.$arr_kills[3].']</b> </li>';
-echo '<li data-data="'.$arr_kills[4].'" sd-sd="22"> <b><a href="'.$ssylka_na_stats.'?search='.$guidxx[4].'&main='.$chatdbarc.'" style="font-size:14px;font-family:Impact;color:Black;text-shadow: 0 0 5px #fff, 0 0 1px #fff, 0 0 2px #919903, 0 0 16px #919903, 0 0 18px #919903, 0 0 19px #919903, 0 0 20px #919903;">'.$arr_playername[4].'</a></b> <b style="color:white;">[Kills: '.$arr_kills[4].']</b> </li>';                                 
- echo '</ul></div></div></div></section>'; 
-echo "</td>";
- }
-
-$reponse = $dbw3->query('SELECT * FROM play_stats_week where s_ratio ORDER BY (s_ratio+0) DESC LIMIT 5');
-while ($row = $reponse->fetch())	
-{	
-                $serverx    = $row['servername']; 
-                $playername = $row['s_player'];
-                $place      = $row['s_place'];
-                $kills      = $row['s_kills'];			
-                $ratio      = $row['s_ratio'];
-                $guid       = $row['s_guid'];
-                $clc        = $row['s_clear'];
-				
-                $xarr_playername[] = $playername;
-				$xarr_ratio[] = $ratio;
-				
-}
-if(!empty($xarr_ratio[4])){ 
- echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div style="max-width: 95%;"><div class="container"><div class="col-md-6"><div><ul class="chart2">'; 	
-echo '<li data-data="'.$xarr_ratio[0].'" sd-sd="22"> <b>'.$xarr_playername[0].'</b> <b>[K/D: '.round($xarr_ratio[0], 4).']</b>  </li>';
-echo '<li data-data="'.$xarr_ratio[1].'" sd-sd="22"> <b>'.$xarr_playername[1].'</b> <b>[K/D: '.round($xarr_ratio[1], 4).']</b>  </li>';
-echo '<li data-data="'.$xarr_ratio[2].'" sd-sd="22"> <b>'.$xarr_playername[2].'</b> <b>[K/D: '.round($xarr_ratio[2], 4).']</b>  </li>';
-echo '<li data-data="'.$xarr_ratio[3].'" sd-sd="22"> <b>'.$xarr_playername[3].'</b> <b>[K/D: '.round($xarr_ratio[3], 4).']</b>  </li>';
-echo '<li data-data="'.$xarr_ratio[4].'" sd-sd="22"> <b>'.$xarr_playername[4].'</b> <b>[K/D: '.round($xarr_ratio[4], 4).']</b>  </li>';                                
- echo '</ul></div></div></div></div></section>'; 
-echo "</td>";
-}
-echo "</tr>";
-
- echo "<tr>";   
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-Skills
-&emsp;</center></td>";	
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-Head
-&emsp;</center></td>";	 
- echo "</tr>"; 
+ if (!empty($search)) 
+include("functions/weapons_table.php");	 
+	
+echo'
+</tr>
+	
+';
 
 
-$reponse = $dbw3->query('SELECT * FROM play_stats_week where s_skill ORDER BY (s_skill+0)  DESC LIMIT 5');
-while ($row = $reponse->fetch())	
-{	
-                $serverx    = $row['servername']; 
-                $cntz       = $row['servermd5']; 
-                $playername = $row['s_player'];
-                $place      = $row['s_place'];
-                $kills      = $row['s_kills'];
-                $deaths     = $row['s_deaths'];				
-                $ratio      = $row['s_ratio'];
-                $skill      = $row['s_skill'];
-				$prestige   = $row['new_prestige'];
-                $suicids    = $row['s_suicids'];				
-                $heads      = $row['s_heads'];
-                $nades      = $row['s_grenade'];
-                $guid       = $row['s_guid'];
-                $clc        = $row['s_clear'];
-                $geo        = $row['s_geo'];
-                $melle      = $row['s_melle'];
-				
-                $xxarr_playername[] = $playername;
-				$xarr_skill[] = $skill;
-							
-} 
- 
-echo "<tr>";
- if(!empty($xarr_skill[4])){ 
- echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div class="container"><div class="col-md-6"><div><ul class="chart3">'; 		
-echo '<li data-data="'.$xarr_skill[0].'" sd-sd="22"> <b>'.$xxarr_playername[0].'</b> <b>[Skill: '.$xarr_skill[0].']</b>  </li>';
-echo '<li data-data="'.$xarr_skill[1].'" sd-sd="22"> <b>'.$xxarr_playername[1].'</b> <b>[Skill: '.$xarr_skill[1].']</b>  </li>';
-echo '<li data-data="'.$xarr_skill[2].'" sd-sd="22"> <b>'.$xxarr_playername[2].'</b> <b>[Skill: '.$xarr_skill[2].']</b>  </li>';
-echo '<li data-data="'.$xarr_skill[3].'" sd-sd="22"> <b>'.$xxarr_playername[3].'</b> <b>[Skill: '.$xarr_skill[3].']</b>  </li>';
-echo '<li data-data="'.$xarr_skill[4].'" sd-sd="22"> <b>'.$xxarr_playername[4].'</b> <b>[Skill: '.$xarr_skill[4].']</b>  </li>';                                 
- echo '</ul></div></div></div></section>'; 
-echo "</td>";
- }
-$reponse = $dbw3->query('SELECT * FROM play_stats_week where s_heads ORDER BY (s_heads+0)  DESC LIMIT 5');
-while ($row = $reponse->fetch())	
-{	
-                $serverx    = $row['servername']; 
-                $cntz       = $row['servermd5']; 
-                $playername = $row['s_player'];
-                $place      = $row['s_place'];
-                $kills      = $row['s_kills'];
-                $deaths     = $row['s_deaths'];				
-                $ratio      = $row['s_ratio'];
-                $skill      = $row['s_skill'];
-				$prestige   = $row['new_prestige'];
-                $suicids    = $row['s_suicids'];				
-                $heads      = $row['s_heads'];
-                $nades      = $row['s_grenade'];
-                $guid       = $row['s_guid'];
-                $clc        = $row['s_clear'];
-                $geo        = $row['s_geo'];
-                $melle      = $row['s_melle'];
-				
-                $zarr_playername[] = $clc;
-                $xarr_heads[] = $heads;
-				
-				$rrattio = round(($kills/$deaths),2);				
-} 
- if(!empty($xarr_heads[4])){ 
- echo "<td style=\"background:" . ($i % 2 ? '#111' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div style="max-width: 95%;"><div class="container"><div class="col-md-6"><div><ul class="chart4">'; 		
-echo '<li data-data="'.$xarr_heads[0].'" sd-sd="22"> <b>'.$zarr_playername[0].'</b> <b>[HeadShots: '.$xarr_heads[0].']</b>  </li>';
-echo '<li data-data="'.$xarr_heads[1].'" sd-sd="22"> <b>'.$zarr_playername[1].'</b> <b>[HeadShots: '.$xarr_heads[1].']</b>  </li>';
-echo '<li data-data="'.$xarr_heads[2].'" sd-sd="22"> <b>'.$zarr_playername[2].'</b> <b>[HeadShots: '.$xarr_heads[2].']</b>  </li>';
-echo '<li data-data="'.$xarr_heads[3].'" sd-sd="22"> <b>'.$zarr_playername[3].'</b> <b>[HeadShots: '.$xarr_heads[3].']</b>  </li>';
-echo '<li data-data="'.$xarr_heads[4].'" sd-sd="22"> <b>'.$zarr_playername[4].'</b> <b>[HeadShots: '.$xarr_heads[4].']</b>  </li>';                                 
- echo '</ul></div></div></div></div></section>'; 
-echo "</td>";
- }
-echo "</tr>";
+
+
+
+
+
+
+	
+			 }
+
+
+
 echo '</table>';
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- $shadowheader = $shadow_top_month;
-echo '</br></br>';
+
+
+
+
+
+
+
+
+
+
+
+
  
- /*
- echo ' <table border="0" width="70%" id="container">
-<tr> 
-<td style="background:#141e21; opacity: 0.9; font-family: Ariel; font-size: 18px;font-size:'.$auto_font_title_week.';'.$shadowheader.'"> <center>&emsp;
-MONTH TOP 5 
-&emsp;</center></td>	
-
-</tr> 
- </table>
-</br><table border="0" width="70%" id="container"><tr>';   
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-Kills
-&emsp;</center></td>";	
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-K/D Ratio
-&emsp;</center></td>";	 
- echo "</tr>"; 
-  
- echo "<tr>";
- echo "<td style=\"background:" . ($i % 2 ? '#222' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div class="container"><div class="col-md-6"><div><ul class="chart5">'; 		
-echo '<li data-data="'.$arr_kills[0].'" sd-sd="22"> <b>'.$arr_playername[0].'</b> <b style="color:white;">[Kills: '.$arr_kills[0].']</b> </li>';
-echo '<li data-data="'.$arr_kills[1].'" sd-sd="22"> <b>'.$arr_playername[1].'</b> <b style="color:white;">[Kills: '.$arr_kills[1].']</b> </li>';
-echo '<li data-data="'.$arr_kills[2].'" sd-sd="22"> <b>'.$arr_playername[2].'</b> <b style="color:white;">[Kills: '.$arr_kills[2].']</b> </li>';
-echo '<li data-data="'.$arr_kills[3].'" sd-sd="22"> <b>'.$arr_playername[3].'</b> <b style="color:white;">[Kills: '.$arr_kills[3].']</b> </li>';
-echo '<li data-data="'.$arr_kills[4].'" sd-sd="22"> <b>'.$arr_playername[4].'</b> <b style="color:white;">[Kills: '.$arr_kills[4].']</b> </li>';                                 
- echo '</ul></div></div></div></section>'; 
-echo "</td>";
-
- echo "<td style=\"background:" . ($i % 2 ? '#222' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div style="max-width: 95%;"><div class="container"><div class="col-md-6"><div><ul class="chart6">'; 	
-echo '<li data-data="'.$arr_ratio[0].'" sd-sd="22"> <b>'.$arr_playername[0].'</b> <b>[K/D: '.round($arr_ratio[0], 2).']</b>  </li>';
-echo '<li data-data="'.$arr_ratio[1].'" sd-sd="22"> <b>'.$arr_playername[1].'</b> <b>[K/D: '.round($arr_ratio[1], 2).']</b>  </li>';
-echo '<li data-data="'.$arr_ratio[2].'" sd-sd="22"> <b>'.$arr_playername[2].'</b> <b>[K/D: '.round($arr_ratio[2], 2).']</b>  </li>';
-echo '<li data-data="'.$arr_ratio[3].'" sd-sd="22"> <b>'.$arr_playername[3].'</b> <b>[K/D: '.round($arr_ratio[3], 2).']</b>  </li>';
-echo '<li data-data="'.$arr_ratio[4].'" sd-sd="22"> <b>'.$arr_playername[4].'</b> <b>[K/D: '.round($arr_ratio[4], 2).']</b>  </li>';                                 
- echo '</ul></div></div></div></div></section>'; 
-echo "</td>";
-
-echo "</tr>";
-
- echo "<tr>";   
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-Skills
-&emsp;</center></td>";	
-echo "<td style=\"background:#333; width: 50%; font-family: Ariel; font-size: 18px;font-size:".$auto_font_title.";".$shadowheader."\"> <center>&emsp;
-Headshots
-&emsp;</center></td>";	 
- echo "</tr>"; 
 
 
-echo "<tr>";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
- echo "<td style=\"background:" . ($i % 2 ? '#222' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div class="container"><div class="col-md-6"><div><ul class="chart7">'; 		
-echo '<li data-data="'.$arr_skill[0].'" sd-sd="22"> <b>'.$arr_playername[0].'</b> <b>[Skill: '.$arr_skill[0].']</b>  </li>';
-echo '<li data-data="'.$arr_skill[1].'" sd-sd="22"> <b>'.$arr_playername[1].'</b> <b>[Skill: '.$arr_skill[1].']</b>  </li>';
-echo '<li data-data="'.$arr_skill[2].'" sd-sd="22"> <b>'.$arr_playername[2].'</b> <b>[Skill: '.$arr_skill[2].']</b>  </li>';
-echo '<li data-data="'.$arr_skill[3].'" sd-sd="22"> <b>'.$arr_playername[3].'</b> <b>[Skill: '.$arr_skill[3].']</b>  </li>';
-echo '<li data-data="'.$arr_skill[4].'" sd-sd="22"> <b>'.$arr_playername[4].'</b> <b>[Skill: '.$arr_skill[4].']</b>  </li>';                                 
- echo '</ul></div></div></div></section>'; 
-echo "</td>";
+ 
 
- echo "<td style=\"background:" . ($i % 2 ? '#222' : '#222') . ";opacity: 0.9; font-family: Titillium Web; color: Silver;font-size: 18px;font-size:".$auto_font.";\">";
- echo '<section><div style="max-width: 95%;"><div class="container"><div class="col-md-6"><div><ul class="chart8">'; 		
-echo '<li data-data="'.$arr_heads[0].'" sd-sd="22"> <b>'.$arr_playername[0].'</b> <b>[HeadShots: '.$arr_heads[0].']</b>  </li>';
-echo '<li data-data="'.$arr_heads[1].'" sd-sd="22"> <b>'.$arr_playername[1].'</b> <b>[HeadShots: '.$arr_heads[1].']</b>  </li>';
-echo '<li data-data="'.$arr_heads[2].'" sd-sd="22"> <b>'.$arr_playername[2].'</b> <b>[HeadShots: '.$arr_heads[2].']</b>  </li>';
-echo '<li data-data="'.$arr_heads[3].'" sd-sd="22"> <b>'.$arr_playername[3].'</b> <b>[HeadShots: '.$arr_heads[3].']</b>  </li>';
-echo '<li data-data="'.$arr_heads[4].'" sd-sd="22"> <b>'.$arr_playername[4].'</b> <b>[HeadShots: '.$arr_heads[4].']</b>  </li>';                                 
- echo '</ul></div></div></div></div></section>'; 
-echo "</td>";
-
-echo "</tr>";
-echo '</table>';
-*/
-}
-
-
-
-
-
-
-
+ 	
 
 
 
@@ -1548,7 +1667,7 @@ catch(Exception $e)
 }
 
 
-$fff = $soob_na_page - $ssssob;
+$fff = $top_main_total - $ssssob;
 
 $t = 0;
 for ($i = 1 ; $i <= $nb_pages ; $i++)
@@ -1562,7 +1681,7 @@ for ($i = 1 ; $i <= $nb_pages ; $i++)
 			  
 			for ($k = 1 ; $k <= $fff; $k++)
 			{
-		 if($soob_na_page < $ssssob + 10)
+		 if($top_main_total < $ssssob + 10)
 		  echo '</br>';
 	        }
 		 
@@ -1573,11 +1692,16 @@ for ($i = 1 ; $i <= $nb_pages ; $i++)
 echo '<br/><div class="footerx"><div class="footer">';
 
 if (is_numeric($key))	
-$pageskey = '<a href="'.$ssylka_na_stats.'?pass=' . $passsword .'&server=' . $server .'&search=' . $search .'&geo=' . $geosearch .'&timeh=' . $timesearch .'&kills=' . $search_kills .'&deaths=' . $search_deaths .'&ip=' . $search_ip.'&main=' . $chatdbarc.'&page=';    
+$pageskey = '<a href="'.$ssylka_na_stats.'?pass=' . $passsword .'&server=' . $server .'&search=' . $search .'&xgeo=' . $search_geo .'&timeh=' . $timesearch .'&kills=' . $search_kills .'&deaths=' . $search_deaths .'&ip=' . $search_ip.'&main=' . $chatdbarc.'&page=';    
+ else if  ((($search_kills == 'sort') && (!empty($server))))
+ {
+	$search_kills = '0';
+$pageskey = '<a href="'.$ssylka_na_stats.'?server=' . $server .'&knife='. $search_knife .'&search=' . $search .'&xgeo=' . $search_geo.'&skill=' . $search_skill.'&headhots=' . $search_heads .'&timeh=' . $timesearch .'&kills=' . $search_kills .'&ratios='. $search_ratiokd .'&deaths=' . $search_deaths.'&page=';
+ }
  else
-$pageskey = '<a href="'.$ssylka_na_stats.'?server=' . $server .'&search=' . $search .'&geo=' . $geosearch .'&timeh=' . $timesearch .'&kills=' . $search_kills .'&deaths=' . $search_deaths.'&page=';
+$pageskey = '<a href="'.$ssylka_na_stats.'?server=' . $server .'&knife='. $search_knife .'&search=' . $search .'&xgeo=' . $search_geo.'&skill=' . $search_skill.'&headhots=' . $search_heads .'&timeh=' . $timesearch .'&kills=' . $search_kills .'&ratios='. $search_ratiokd .'&deaths=' . $search_deaths.'&page=';
 
-
+  
 // Проверяем нужны ли стрелки назад
 if ($page != 1) $pervpage = $pageskey.'1">Первая</a> | '.$pageskey.($page - 1).'">Предыдущая</a> | ';
 // Проверяем нужны ли стрелки вперед
@@ -1624,7 +1748,7 @@ for ($i = 1 ; $i <= $nb_pages ; $i++)
 		$pi = $i;
 		
 	  if(!empty($_GET['page']))
-		if(($_GET['page']) == $i)        // font-size: 18px;
+		if(($_GET['page']) == $i)        // font-size: 16px;
 			$pi = '<b class="flashingf">&nbsp;'.$i.'&nbsp;</b>';             	
 if(!empty($search_nickname))
 	$search_nickname = $search;

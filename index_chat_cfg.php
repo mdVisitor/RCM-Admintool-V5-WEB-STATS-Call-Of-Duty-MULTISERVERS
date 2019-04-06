@@ -2,19 +2,27 @@
 
   $steamkey = 'Ваш Steam Key'; 
   
- $Msql_support = 1; // 1 - Msql  0 - SqLite3
-    $host_adress = '127.0.0.1:3301';
-    $db_name   = 'chatserver';
+ 
+ 
+  $Msql_support = 0; // 1 - Msql  0 - SqLite3
+    
+	///*********** FOR MSQL ONLY
+	$host_adress = 'localhost:3308';
+    $db_name   = 'adminmod';
     $db_user = 'root';
     $db_pass = '260386';
     $charset_db = 'utf8';
+	///*********** FOR MSQL ONLY
+	
+	
+	
   
-  $ssylka_na_ikonki = 'http://87.110.93.78/chat/'; //ссылка где лежат папки с  [flags-mini,css,css_js.....]
+  $ssylka_na_ikonki = 'http://localhost/chat/'; //ссылка где лежат папки с  [flags-mini,css,css_js.....]
   
   
 /* #######################   STATS    ####################### */
 /* ########################################################## */  
-  $ssylka_na_stats = 'http://87.110.93.78/chat/stats.php';
+  $ssylka_na_stats = 'http://localhost/chat/stats.php';
   
   $stats_db_path        = 'db3.sqlite';    /// db3.sqlite
   $stats_db_path_week   = 'dbw3.sqlite';   /// dbw3.sqlite
@@ -42,18 +50,18 @@
   $color_ban_knopki = 'red';
 
 
-  $top_main_total=30; //количество строк на страницу
+  $top_main_total=20; //количество строк на страницу
   
 /* #######################   STATS    ####################### */ 
 /* ########################################################## */ 
 
-  $ssylka_na_chat = 'http://87.110.93.78/chat/index.php';
+  $ssylka_na_chat = 'http://localhost/chat/index.php';
   
-  $chatdb_path = 'chatdb.sqlite'; /// Не забываем поставить права 666 на этот файл, для автообновления гео флагов.
+  $chatdb_path = 'D:\_TEST_SERVER\RECODMOD_MULTI_SERVERS\ReCodMod\databases\chatdb.sqlite'; /// Не забываем поставить права 666 на этот файл, для автообновления гео флагов.
   $soob_na_page=70; //количество строк сообшений на страницу
   $title_migalka = 'Чат Серверов';
   $title_zagolovok_stranicy = 'zona-ato-game.ru';
-  $main_servername = '<img src="http://zona-ato-game.ru/forum/uploads/monthly_2018_07/59de67b25928d.png.c17aa4b8f94eff15c8411bb4c029f7ec.png" alt="zona-ato-game.ru">';
+  $main_servername = '<img src="http://zona-ato-game.ru/uploads/monthly_2018_07/59de67b25928d.png.c17aa4b8f94eff15c8411bb4c029f7ec.png" alt="zona-ato-game.ru">';
   $cache_folder = "cache/"; // Адрес нахождения папки var/www/site/cache/
   $raznica_vremya = '0'; // +1 час // -1 час и т.д.
   

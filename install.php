@@ -18,7 +18,7 @@ try
 	$dbc->exec('CREATE table IF NOT EXISTS `chat`(
 			`id` int(11) NOT NULL AUTO_INCREMENT,
 			`servername` varchar(255)  NOT NULL,
-			`servermd5` varchar(50)  NOT NULL,
+			`s_port` varchar(50)  NOT NULL,
 			`guid` varchar(255)  NOT NULL,
 			`nickname` varchar(255)  NOT NULL,
 			`time` varchar(255)  NOT NULL,

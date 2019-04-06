@@ -1,49 +1,6 @@
 ﻿<?php
 $chatdb = $chatdb_path;
-if(!empty($Msql_support)){
-if (!file_exists($chatdb)){
-try
-{   
 
-      if(empty($Msql_support))
-    $dbc = new PDO('sqlite:' . $chatdb);
-      else
-	  {	  	  
-    $dsn = "mysql:host=$host_adress;dbname=$db_name;charset=$charset_db";
-    $opt = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES   => false,
-    ];
-    $dbc = new PDO($dsn, $db_user, $db_pass, $opt);		  	  
-	  }
-	$dbc->exec('CREATE table IF NOT EXISTS `chat`(
-			`id` int(11) NOT NULL AUTO_INCREMENT,
-			`servername` varchar(255)  NOT NULL,
-			`servermd5` varchar(50)  NOT NULL,
-			`guid` varchar(255)  NOT NULL,
-			`nickname` varchar(255)  NOT NULL,
-			`time` varchar(255)  NOT NULL,
-			`timeh` varchar(255)  NOT NULL,			
-			`text` varchar(255)  NOT NULL,			
-			`st1` varchar(255)  NOT NULL,
-			`st1days` varchar(255)  NOT NULL,			
-			`st2` varchar(255)  NOT NULL,
-            `st2days` varchar(255)  NOT NULL,			
-			`ip` varchar(255)  NOT NULL,
-			`geo` varchar(255)  NOT NULL,
-			`z` varchar(20)  NOT NULL,
-			`t` varchar(20)  NOT NULL,
-			`x` varchar(20)  NOT NULL,
-			`c` varchar(20)  NOT NULL,
-			PRIMARY KEY (`id`)
-	)');	
-	$st = $dbc->query('SELECT guid FROM chat');
-	$result = $st->fetchAll();
-	if (sizeof($result) == 0)
-	{echo 'Table created successfully' . "\n";}}
-    catch(PDOException $e){die($e->getMessage());}}	
-}
 if(empty($Msql_support)){	
 if (filesize($chatdb_path) > ($chatdbsize * 1000000)) 
   {
@@ -74,7 +31,7 @@ try
 	$dbc->exec('CREATE table chat(
 			id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
 			servername varchar(255)  NOT NULL,
-			servermd5 varchar(50)  NOT NULL,
+			s_port varchar(50)  NOT NULL,
 			guid varchar(255)  NOT NULL,
 			nickname varchar(255)  NOT NULL,
 			time varchar(255)  NOT NULL,

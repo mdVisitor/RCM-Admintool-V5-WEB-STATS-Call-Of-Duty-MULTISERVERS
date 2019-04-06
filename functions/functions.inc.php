@@ -1,4 +1,11 @@
 ﻿<?php
+
+function get_percentage($percentage, $of)
+{
+	$percent = $percentage / $of;
+	return  number_format( $percent * 100, 2 ) . '%';
+}
+
  function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
