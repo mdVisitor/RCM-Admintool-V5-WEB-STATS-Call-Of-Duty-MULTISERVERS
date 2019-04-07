@@ -1,4 +1,5 @@
 ﻿<?php
+/*	
 if(!empty($key))
  {   
 if (!empty($search))
@@ -24,10 +25,10 @@ else
  }
 else
 {
-	
+*/	
 	
 if (!empty($search))
- $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_1 where s_guid like '".$search."'");	 //s_guid='$search'   s_guid like "%'.$search.'%"
+ $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_0 where s_guid like '".$search."'");	 //s_guid='$search'   s_guid like "%'.$search.'%"
 
 
 
@@ -41,13 +42,13 @@ if (!empty($search))
 
 
 else if (!empty($searchplayername))
- $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_1 where s_player like '".$searchplayername."'");	 //s_guid='$search'   s_guid like "%'.$search.'%"
+ $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_0 where s_player like '".$searchplayername."'");	 //s_guid='$search'   s_guid like "%'.$search.'%"
 
 else if ((!empty($search_kills))&&(!empty($server)))
-$reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_1 where s_kills and s_port='$server' ORDER BY (s_kills+0)");
+$reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_0 where s_kills and s_port='$server' ORDER BY (s_kills+0)");
 
 else if (!empty($server))
- $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_1 where s_port='$server'"); 
+ $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_0 where s_port='$server'"); 
 
 else if (!empty($search_kills))
 $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_1 where s_kills ORDER BY (s_kills+0)");
@@ -77,4 +78,14 @@ $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_1 where s_c4 ORDER BY
 
 else
   $reponse=$bdd ->query("SELECT COUNT(*) AS id FROM db_stats_1 where s_kills ORDER BY (s_kills+0)");	
-}
+
+
+
+
+
+
+
+
+
+
+//}

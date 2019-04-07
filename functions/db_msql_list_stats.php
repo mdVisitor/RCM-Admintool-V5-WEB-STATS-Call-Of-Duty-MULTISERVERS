@@ -1,10 +1,11 @@
 ﻿<?php
+/*	
  if(!empty($key))
  { 
  if (!empty($search))
- $reponse = $bdd->query('SELECT * FROM db_stats_1 where s_guid like "'.$search.'"  ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
+ $reponse = $bdd->query('SELECT * FROM db_stats_0 where s_guid like "'.$search.'"  ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
 else if (!empty($searchplayername))
-$reponse = $bdd->query('SELECT * FROM db_stats_1 where s_player like "'.$searchplayername.'"  ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);	
+$reponse = $bdd->query('SELECT * FROM db_stats_0 where s_player like "'.$searchplayername.'"  ORDER BY id DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);	
 
 
 
@@ -25,7 +26,7 @@ else
  
  }else{	 
  
- 
+ */
  
  
  
@@ -38,73 +39,264 @@ else
  
  
  if (!empty($search))
-  $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
- (select * from db_stats_2 where w_guid like "'.$search.'") 
- t2 ON t1.s_pg = t2.s_pg where s_guid like "'.$search.'"
+	 /*
+  $reponse = $bdd->query('SELECT t1.*, t2.* 
+from db_stats_1 t1 
+join 
+ (select * from db_stats_2) 
+ t2 ON t1.s_pg = t2.s_pg 
+      where s_guid like "'.$search.'"
  ORDER BY (s_kills+0) DESC LIMIT 10');
+ */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_guid like "'.$search.'"
+ ORDER BY (t1.s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
+ 
+ 
+ 
+ 
+ 
  
   
 
 
 else if (!empty($searchplayername))
+	 /*	
 $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_guid like "'.$searchplayername.'"
  ORDER BY (s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
-
+ */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_player like "'.$searchplayername.'"
+ ORDER BY (t1.s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
 else if ((!empty($server))&&(!empty($search_heads)))
+	 /*	
    $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_port="'.$server.'"
- ORDER BY (s_heads+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);    
+ ORDER BY (s_heads+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);  
+
+ */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_port="'.$server.'"
+ ORDER BY (t1.s_heads+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+ 
  
 else if ((!empty($server))&&(!empty($search_skill)))
+	 /*	
    $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_port="'.$server.'"
- ORDER BY (w_skill+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);   
+ ORDER BY (w_skill+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);  
+
+ */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_port="'.$server.'"
+ ORDER BY (t1.w_skill+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
+
+
+
+ 
  
 else if ((!empty($server))&&(!empty($search_ratiokd)))
+	 /*	
    $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_port="'.$server.'"
  ORDER BY (w_ratio+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);  
+ */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_port="'.$server.'"
+ ORDER BY (t1.w_ratio+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);  
+ 
+ 
  
 else if ((!empty($server))&&(!empty($search_deaths)))
-   $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
+  	 /*
+ $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_port="'.$server.'"
  ORDER BY (s_deaths+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
+  */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_port="'.$server.'"
+ ORDER BY (t1.s_deaths+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);  
+ 
+ 
 
 else if ((!empty($server))&&(!empty($search_kills)))
-   $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
+   	 /*
+ $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_port="'.$server.'"
  ORDER BY (s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
+   */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_port="'.$server.'"
+ ORDER BY (t1.s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
+ 
  
 else if ((!empty($server))&&(!empty($search_knife)))
-   $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
+     	 /* 
+$reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_port="'.$server.'"
  ORDER BY (s_melle+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
+    */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_port="'.$server.'"
+ ORDER BY (t1.s_melle+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
  
 else if (!empty($server))
-   $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
+      	 /*
+	 $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_port="'.$server.'" and t1.s_kills
  ORDER BY (s_kills+0) DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total.''); 
+    */
  
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t0.s_port="'.$server.'" and t1.s_kills
+ ORDER BY (t1.s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);  
 
 
 
 else if (!empty($search_kills))
-$reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
+     	 /*
+	 $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
  (select * from db_stats_2) 
  t2 ON t1.s_pg = t2.s_pg where s_kills
  ORDER BY (s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
-
+    */
+ 
+ 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+    join 
+ (select * from db_stats_2) 
+ t2 ON 
+ t1.s_pg = t2.s_pg where t1.s_kills
+ ORDER BY (t1.s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total); 
 
 
 
@@ -185,10 +377,19 @@ LEFT OUTER JOIN db_stats_2 d ON u.s_guid = d.w_guid where u.s_kills ORDER BY (u.
   */
  
  
-   $reponse = $bdd->query('SELECT t1.*, t2.* from db_stats_1 t1 join 
+   $reponse = $bdd->query('SELECT t0.*, t1.*, t2.* 
+   from db_stats_0 t0 
+   join 
+ (select * from db_stats_1) 
+ t1 ON 
+ t0.s_pg = t1.s_pg
+ 
+    join 
  (select * from db_stats_2) 
- t2 ON t1.s_pg = t2.s_pg
- ORDER BY (s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
+ t2 ON 
+ t1.s_pg = t2.s_pg
+ 
+ ORDER BY (t1.s_kills+0)  DESC LIMIT ' . $premierMessageAafficher . ', ' . $top_main_total);
  	 
  
  
@@ -220,4 +421,4 @@ LEFT OUTER JOIN db_stats_2 d ON u.s_guid = d.w_guid where u.s_kills ORDER BY (u.
  
  
  
- }
+ /////////}

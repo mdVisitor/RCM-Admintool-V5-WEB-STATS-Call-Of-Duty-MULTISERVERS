@@ -4,7 +4,7 @@
   
  
  
-  $Msql_support = 0; // 1 - Msql  0 - SqLite3
+  $Msql_support = 1; // 1 - Msql  0 - SqLite3
     
 	///*********** FOR MSQL ONLY
 	$host_adress = 'localhost:3308';
@@ -119,4 +119,51 @@ $steam_users_id = array(
  "213123124124" => "Moderator"
  
  );	
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+/////////////////////// PLUGINS ///////////////////////// 
+
+//// B3 plugin
+
+## settings for the echelon database
+$hostname_wwwvalidate = "localhost";
+$database_wwwvalidate = "echelon";
+$username_wwwvalidate = "bot";
+$password_wwwvalidate = "80a35f39028fb83ac04d8376f95cde0e";
+
+## settings for your b3 databases
+$config = array(
+  "clanname" => "Echelon",
+  //How many servers do we have down here
+  "numservers" => 1, 
+  "servers" => array(
+    1 => array(
+      "name" => "All",
+      // Database connection for the B3 
+      "hostname" => "localhost",
+      "database" => "big_bot_2",
+      "username" => "bot",
+      "password" => "80a35f39028fb83ac04d8376f95cde0e",
+      //Do we have PunkBuster in this game? If yes, we'll use RCON to ban/unban PB-guids - Set it to "0" if not.
+      "PBactive" => "1",
+      //Set up rcon for talkback (need chatlogger plugin installed) and PB banning facilities
+      "rcon_ip" => "91.240.86.141",
+      "rcon_port" => "28961",
+      "rcon_pass" => "_SmK67nT6e0DBUDsf",
+      // set to 1 if you want permban from that server included into the banlist page.
+      "include_in_banlist" => 1,
+      // set this to 1 if you are using the chatlogger plugin setup for that server. (see http://www.bigbrotherbot.com/forums/index.php?topic=423.0)
+      "chatlogger_activated" => 0
+    ),
+
+  )
+);
+ 
+ 
  

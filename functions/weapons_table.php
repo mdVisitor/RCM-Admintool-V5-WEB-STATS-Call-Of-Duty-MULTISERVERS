@@ -39,8 +39,8 @@ if (!empty($search))
 foreach ($guidxportarr as $tysef){
 	
 	
-$reponset = $bdd->query('SELECT s_pg, w_guid, w_port, ac130_,airstrike_,at4_mp,aw50_,binoculars,cobra_,defaultweapon_mp,destructible_car,
-destructible_bar,hind_ffar,helicopter_,radar_ FROM db_stats_5 where w_guid = '.$search.' and s_pg = '.$tysef.' LIMIT 1'); 
+$reponset = $bdd->query('SELECT s_pg,ac130_,airstrike_,at4_mp,aw50_,binoculars,cobra_,defaultweapon_mp,destructible_car,
+destructible_bar,hind_ffar,helicopter_,radar_ FROM db_stats_5 where s_pg = '.$tysef.' LIMIT 1'); 
  
  
  while ($row = $reponset->fetch())	
@@ -72,7 +72,7 @@ destructible_bar,hind_ffar,helicopter_,radar_ FROM db_stats_5 where w_guid = '.$
 
 
 
-$reponseg = $bdd->query('SELECT * FROM db_stats_3 where w_guid = '.$search.' and s_pg = '.$tysef.' LIMIT 1'); 
+$reponseg = $bdd->query('SELECT * FROM db_stats_3 where s_pg = '.$tysef.' LIMIT 1'); 
  
  while ($row = $reponseg->fetch())	
 {	
@@ -93,7 +93,7 @@ $reponseg = $bdd->query('SELECT * FROM db_stats_3 where w_guid = '.$search.' and
 
 
 
-$reponseg = $bdd->query('SELECT * FROM db_stats_4 where w_guid = '.$search.' and s_pg = '.$tysef.' LIMIT 1'); 
+$reponseg = $bdd->query('SELECT * FROM db_stats_4 where s_pg = '.$tysef.' LIMIT 1'); 
  
  while ($row = $reponseg->fetch())	
 {	
