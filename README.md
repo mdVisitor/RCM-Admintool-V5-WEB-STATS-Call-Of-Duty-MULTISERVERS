@@ -1,9 +1,9 @@
-Web-Chat Call Of Duty 1/2/3/4/5 - versions
-Web Chat (with Compactitable ReCodMod RCM Admintool)
+Stats system Call Of Duty 1/2/3/4/5 - versions
+Stats system, web chat, admintool (with Compactitable ReCodMod RCM Admintool)
 
-Compactitable only with ReCodMod-RCM-Admintool V5.
+Download and unzip archive -> https://github.com/EXRecod/RCM-Admintool-V5-WEB-STATS-Call-Of-Duty-MULTISERVERS/blob/master/codbox.zip
 
-- Unzip flags-mini.zip flags images in the inside flags-mini folder  
+Compactitable only with ReCodMod-RCM-Admintool V5. 
 
 - Need edit index_chat_cfg.php
 
