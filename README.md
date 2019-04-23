@@ -13,20 +13,20 @@ Compactitable only with ReCodMod-RCM-Admintool V5.
 
 add Example: $chatdb_path = '/path/to/chat/chatdb.sqlite';
 
-** CHAT
+# CHAT
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/img/chattt.jpg)
 
-** WEAPON STATS
+# WEAPON STATS
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/upload/1r.jpg)
 
-** MAIN TOP STATS
+# MAIN TOP STATS
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/upload/2r.jpg)
 
-** GEO TOP
+# GEO TOP
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/upload/3r.jpg)
 
-** MAMBA ADMIN TOOL
+# MAMBA ADMIN TOOL
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/upload/4r.jpg)
 
-** PLAYER STATUS CONTROL
+# PLAYER STATUS CONTROL
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/upload/5r.jpg)
