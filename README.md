@@ -14,7 +14,7 @@ Compactitable only with ReCodMod-RCM-Admintool V5.
 add Example: $chatdb_path = '/path/to/chat/chatdb.sqlite';
 
 
-Add in cron  stats_curl_sitemap.php  each 1 hour!
+#   Add in cron  stats_curl_sitemap.php  each 1 hour!
 
 
 # CHAT
