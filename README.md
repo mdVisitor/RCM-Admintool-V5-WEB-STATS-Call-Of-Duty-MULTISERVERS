@@ -1,7 +1,7 @@
 Stats system Call Of Duty 1/2/3/4/5 - versions
 Stats system, web chat, admintool (with Compactitable ReCodMod RCM Admintool)
 
-Download and unzip archive -> https://github.com/EXRecod/RCM-Admintool-V5-WEB-STATS-Call-Of-Duty-MULTISERVERS/blob/master/codbox.zip
+Download and unzip archive -> https://github.com/EXRecod/RCM-Admintool-V5-WEB-STATS-Call-Of-Duty-MULTISERVERS/blob/master/codbox.rar
 
 Compactitable only with ReCodMod-RCM-Admintool V5. 
 
