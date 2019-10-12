@@ -21,7 +21,6 @@ add Example: $chatdb_path = '/path/to/chat/chatdb.sqlite';
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/img/chattt.jpg)
 
 # WEAPON STATS
-![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/img/1r.jpg)
 
 ![alt text](https://github.com/EXRecod/ReCodMod--RCM-v.5--WEB-CHAT-Call-Of-Duty-MULTISERVERS/blob/master/img/min1.png)
 
